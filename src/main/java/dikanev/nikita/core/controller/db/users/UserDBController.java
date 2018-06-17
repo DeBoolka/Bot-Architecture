@@ -1,0 +1,209 @@
+package dikanev.nikita.core.controller.db.users;
+
+import com.google.common.hash.Hashing;
+import dikanev.nikita.core.model.storage.DBStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class UserDBController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserDBController.class);
+
+    private static UserDBController ourInstance = new UserDBController();
+
+    private PreparedStatement prStatement;
+
+    public static UserDBController getInstance() {
+        return ourInstance;
+    }
+
+    //Создание человека
+    public int createUser(String sName, String name, int idGroup) throws SQLException {
+        String sql = "INSERT INTO users(id_group, s_name, name) " +
+                "VALUES (?, ?, ?)";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idGroup);
+        prStatement.setString(2, sName);
+        prStatement.setString(3, name);
+        int countUpdate = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countUpdate == 0) {
+            LOG.warn("Failed to create a user with the data: (" + sName + ", " + name + ", " + idGroup + " )");
+            throw new IllegalStateException("Failed to create a user");
+        }
+
+        sql = "SELECT LAST_INSERT_ID() AS id";
+        int lastId = -1;
+        Statement statement = DBStorage.getInstance().getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()) {
+            lastId = resultSet.getInt("id");
+        }
+
+        statement.close();
+        return lastId;
+    }
+
+    //Создание человека
+    public int createUser(int id, String sName, String name, int idGroup) throws SQLException {
+        String sql = "INSERT INTO users(id_group, s_name, name, id) " +
+                "VALUES (?, ?, ?, ?)";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idGroup);
+        prStatement.setString(2, sName);
+        prStatement.setString(3, name);
+        prStatement.setInt(4, id);
+        int countUpdate = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countUpdate == 0) {
+            LOG.warn("Failed to create a user with the data: (" + sName + ", " + name + ", " + idGroup + " )");
+            throw new IllegalStateException("Failed to create a user");
+        }
+
+        return id;
+    }
+
+    //Удаление человека
+    public boolean deleteUser(int idUser) throws SQLException {
+        String sql = "DELETE FROM users " +
+                "WHERE id = ? " +
+                "LIMIT 1";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idUser);
+        int countDelete = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countDelete == 0) {
+            LOG.warn("Failed to delete user with id: " + idUser);
+            return false;
+        }
+
+        UserDBController.getInstance().deleteToken(idUser);
+
+        return true;
+    }
+
+    //Добавление человека в группу
+    public boolean toGroup(int idUser, int idGroup) throws SQLException {
+        String sql = "UPDATE users SET id_group = ? " +
+                "WHERE id = ? " +
+                "LIMIT 1";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idGroup);
+        prStatement.setInt(2, idUser);
+        int countUpdate = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countUpdate == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    //Получение информации о человеке.
+    //Возвращает map с ключами: id_group, s_name, name
+    public Map<String, Object> getData(int idUser) throws SQLException {
+        String sql = "SELECT id_group, name, s_name " +
+                "FROM users " +
+                "WHERE id = ? " +
+                "LIMIT 1;";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idUser);
+        ResultSet res = prStatement.executeQuery();
+
+        Map<String, Object> resMap = new TreeMap<>();
+        while (res.next()) {
+            resMap.put("id_group", res.getInt("id_group"));
+            resMap.put("s_name", res.getString("s_name"));
+            resMap.put("name", res.getString("name"));
+        }
+
+        res.close();
+        return resMap;
+    }
+
+    //Получение информации о человеке.
+    //Возвращает map с ключами: id, id_group, s_name, name
+    public Map<String, Object> getData(String hash) throws SQLException {
+        String sql = "SELECT users.id, users.id_group, users.s_name, users.name " +
+                "FROM (SELECT tokens.id FROM tokens WHERE token = ? LIMIT 1) AS tkn LEFT JOIN users USING(id) " +
+                "LIMIT 1;";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setString(1, hash);
+        ResultSet res = prStatement.executeQuery();
+
+        Map<String, Object> resMap = new TreeMap<>();
+        while (res.next()) {
+            resMap.put("id", res.getInt("id"));
+            resMap.put("id_group", res.getInt("id_group"));
+            resMap.put("s_name", res.getString("s_name"));
+            resMap.put("name", res.getString("name"));
+        }
+
+        res.close();
+        return resMap.size() > 0 ? resMap : null;
+    }
+
+    //Создать токен
+    public String createToken(int id) throws SQLException {
+        String hash = getHash(String.valueOf(id) + String.valueOf(System.nanoTime()) + "salt");
+
+        String sql = "INSERT INTO tokens(token, id) " +
+                "VALUES (?, ?)";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setString(1, hash);
+        prStatement.setInt(2, id);
+        int countUpdate = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countUpdate == 0) {
+            LOG.warn("Failed to create a token with the data: (" + hash + ", " + id + ")");
+            throw new IllegalStateException("Failed to create a token");
+        }
+
+        return hash;
+    }
+
+    //Удалить токен
+    public boolean deleteToken(int id) throws SQLException {
+        //todo: Удадяляет все токены из бд
+        String sql = "DELETE FROM tokens " +
+                "WHERE id = ? OR create_time < ?";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, id);
+        prStatement.setTimestamp(2,
+                Timestamp.valueOf(LocalDateTime.now()
+                                .minusMinutes(DBStorage.getInstance().getTokenDeleteTimeMinutes())));
+        int countUpdate = prStatement.executeUpdate();
+        prStatement.close();
+
+        if (countUpdate == 0) {
+            LOG.warn("Failed to create a token with the data: (" + id + ")");
+            return false;
+        }
+
+        return true;
+    }
+
+    //Получение хеша строки
+    public String getHash(String text) {
+        return Hashing.sha256().hashString(text, StandardCharsets.UTF_8).toString();
+    }
+}
