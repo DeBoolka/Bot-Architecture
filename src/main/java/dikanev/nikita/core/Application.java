@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Application {
 
@@ -42,9 +41,9 @@ public class Application {
         DBStorage.getInstance().init(urlDB, loginDB, passwordDB);
 
         int portServer = Integer.parseInt(properties.getProperty("server.port", "9090"));
-        ServerStorage.getInstance().init(portServer);
+        ServerStorage.getInstance().start(portServer);
 
-        jobs = JobStorage.getInstance().getJobs();
+        JobStorage.getInstance().start();
     }
 
     private static Properties loadConfiguration() {
@@ -67,24 +66,6 @@ public class Application {
             System.out.println(command.getId());
         } catch (NoAccessException e) {
             LOG.warn(e.getMessage());
-        }
-
-        if (jobs.isEmpty()) {
-            LOG.warn("No jobs configured. Exist");
-            return;
-        }
-
-        while (true) {
-            for (Job job : jobs) {
-                try {
-                    job.doJob();
-                } catch (Exception e) {
-                    LOG.error("Something wrong", e);
-                }
-            }
-
-            TimeUnit.SECONDS.sleep(1);
-            return;
         }
     }
 

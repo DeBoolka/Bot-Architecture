@@ -102,7 +102,7 @@ public class GroupDBController {
         prStatement.setInt(1, idGroup);
         ResultSet res = prStatement.executeQuery();
 
-        String nameGroup = "";
+        String nameGroup = null;
         while (res.next()) {
             nameGroup = res.getString("name");
         }

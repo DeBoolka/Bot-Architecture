@@ -1,6 +1,7 @@
 package dikanev.nikita.core.model.commands.user;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.GroupObject;
@@ -34,14 +35,14 @@ public class GetUserCommand extends Command {
             Map<String, Object> data = UserController.getInstance().getData(id);
 
             if (data.size() < 3) {
-                throw new SQLException("");
+                return new ExceptionObject(new NotFoundException("User not found"));
             }
 
             idGroup = (Integer) data.get("id_group");
             sName = (String) data.get("s_name");
             name = (String) data.get("name");
         } catch (SQLException e) {
-            return new ExceptionObject(new InvalidParametersException("DB error."));
+            return new ExceptionObject(new InvalidParametersException("DB error"));
         }
 
         return new UserObject(id, idGroup, sName, name);

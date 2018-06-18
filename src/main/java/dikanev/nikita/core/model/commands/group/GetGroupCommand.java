@@ -1,6 +1,7 @@
 package dikanev.nikita.core.model.commands.group;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.GroupObject;
@@ -28,8 +29,11 @@ public class GetGroupCommand extends Command {
         String name;
         try {
             name = GroupController.getInstance().getName(idGroup);
+            if (name == null) {
+                return new ExceptionObject(new NotFoundException("Group not found"));
+            }
         } catch (SQLException e) {
-            return new ExceptionObject(new InvalidParametersException("DB error."));
+            return new ExceptionObject(new InvalidParametersException("DB error"));
         }
 
         return new GroupObject(idGroup, name);

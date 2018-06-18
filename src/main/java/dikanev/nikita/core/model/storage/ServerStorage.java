@@ -21,9 +21,9 @@ public class ServerStorage {
         return ourInstance;
     }
 
-    final int port = 90909;
+    private final int PORT = 9090;
 
-    public void init(int port) throws Exception {
+    public void start(int port) throws Exception {
         try {
             contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
             contextHandler.setContextPath("/api/");
@@ -36,12 +36,12 @@ public class ServerStorage {
             LOG.info("Start Server");
         } catch (Exception e) {
             LOG.error("The server could not be started.");
-            throw new Exception("The server could not be started. port = " + port + "\nMessage: " + e.getMessage());
+            throw new Exception("The server could not be started. PORT = " + port + "\nMessage: " + e.getMessage());
         }
     }
 
-    public void init() throws Exception{
-        init(this.port);
+    public void start() throws Exception{
+        start(this.PORT);
     }
 
     //Возращает текущий сервер
