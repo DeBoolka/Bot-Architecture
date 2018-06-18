@@ -15,6 +15,12 @@ public class DBStorage {
 
     private Connection connection = null;
 
+    private String url = null;
+
+    private String login = null;
+
+    private String password = null;
+
     private long tokenDeleteTimeMinutes = 60*24*31;
 
     public DBStorage() {
@@ -30,6 +36,15 @@ public class DBStorage {
     }
 
     public void init(String url, String login, String password){
+        this.url = url;
+        this.login = login;
+        this.password = password;
+
+        connect();
+    }
+
+    //Подключение к БД
+    private void connect() throws IllegalStateException{
         try {
             if (connection != null) {
                 connection.close();
@@ -44,7 +59,13 @@ public class DBStorage {
         }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() throws SQLException{
+        if(connection.isValid(30)){
+            return connection;
+        }
+
+        connect();
+
         return connection;
     }
 

@@ -24,10 +24,20 @@ public class Application {
     private static List<Job> jobs;
 
     public static void  main(String... args) throws Exception{
+
+        daemonize();
+
+        registerShutdownHook();
+
         init();
 
         LOG.info("Start");
         start();
+    }
+
+    private static void daemonize() throws Exception {
+        System.in.close();
+        System.out.close();
     }
 
     private static void init() throws Exception{
@@ -67,6 +77,17 @@ public class Application {
         } catch (NoAccessException e) {
             LOG.warn(e.getMessage());
         }
+    }
+
+    static public void setShutdownFlag() {
+        System.exit(0);
+    }
+
+    private static void registerShutdownHook()
+    {
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(Application::setShutdownFlag)
+        );
     }
 
 }

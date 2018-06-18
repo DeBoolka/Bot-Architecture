@@ -1,6 +1,7 @@
 package dikanev.nikita.core.model.storage;
 
 import dikanev.nikita.core.model.commands.Command;
+import dikanev.nikita.core.model.commands.check.CheckWorkCommand;
 import dikanev.nikita.core.model.commands.group.*;
 import dikanev.nikita.core.model.commands.user.DeleteUserCommand;
 import dikanev.nikita.core.model.commands.user.GetUserCommand;
@@ -36,6 +37,7 @@ public class CommandStorage {
         addCommand(commandBD.get(7), new GetGroupCommand(7));
         addCommand(commandBD.get(8), new CreateAccessGroupCommand(8));
         addCommand(commandBD.get(9), new DeleteAccessGroupCommand(9));
+        addCommand(commandBD.get(10), new CheckWorkCommand(10));
     }
 
     public void addCommand(String name, Command command) {
