@@ -1,6 +1,8 @@
 package dikanev.nikita.core.controller.commands;
 
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.controller.db.commands.CommandDBController;
+import dikanev.nikita.core.model.storage.CommandStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +34,20 @@ public class CommandController {
 
     //Получение имени комманды. Может вернуть null, если записи нет в бд
     public String getName(int idCommand) throws SQLException {
+        String commandName = CommandStorage.getInstance().getNameCommand(idCommand);
+        if (commandName != null) {
+            return commandName;
+        }
         return CommandDBController.getInstance().getName(idCommand);
     }
 
     //Получение id комманды
-    public int getId(String name) throws SQLException {
-        return CommandDBController.getInstance().getId(name);
+    public int getId(String name) throws SQLException, NotFoundException {
+        int id = CommandStorage.getInstance().getIdCommand(name);
+        if (id == -1) {
+            return CommandDBController.getInstance().getId(name);
+        }
+        return id;
     }
 
     //Получение всех имен комманд

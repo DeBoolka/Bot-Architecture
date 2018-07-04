@@ -1,6 +1,7 @@
 package dikanev.nikita.core.model.commands.group;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.MessageObject;
@@ -39,8 +40,8 @@ public class DeleteAccessGroupCommand extends Command {
                 idCommand = CommandController.getInstance().getId(nameCommand);
             }
             response = AccessGroupController.getInstance().deleteAccess(idGroup, idCommand);
-        } catch (SQLException e) {
-            return new ExceptionObject(new InvalidParametersException("Create a group in the database."));
+        } catch (SQLException | NotFoundException e) {
+            return new ExceptionObject(new InvalidParametersException("Delete a group in the database."));
         }
 
         return new MessageObject(response ? "Ok" : "No");

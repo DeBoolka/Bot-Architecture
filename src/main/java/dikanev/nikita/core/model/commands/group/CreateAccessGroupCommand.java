@@ -1,6 +1,7 @@
 package dikanev.nikita.core.model.commands.group;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.MessageObject;
@@ -8,11 +9,16 @@ import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controller.commands.CommandController;
 import dikanev.nikita.core.controller.groups.AccessGroupController;
 import dikanev.nikita.core.model.commands.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Map;
 
 public class CreateAccessGroupCommand extends Command {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CreateAccessGroupCommand.class);
+
     public CreateAccessGroupCommand(int id) {
         super(id);
     }
@@ -50,11 +56,15 @@ public class CreateAccessGroupCommand extends Command {
                 response = AccessGroupController.getInstance().createAccess(idGroup, idCommands, access);
             } else {
                 if (nameCommand != null) {
-                    idCommand = CommandController.getInstance().getId(nameCommand);
+                    response = AccessGroupController.getInstance().createAccess(idGroup, nameCommand, access);
+                } else if (idCommand >= 0) {
+                    response = AccessGroupController.getInstance().createAccess(idGroup, idCommand, access);
+                } else {
+                    throw new InvalidParametersException("Parameter not found");
                 }
-                response = AccessGroupController.getInstance().createAccess(idGroup, idCommand, access);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidParametersException e) {
+            LOG.debug("Create a group in the database: ", e);
             return new ExceptionObject(new InvalidParametersException("Create a group in the database."));
         }
 

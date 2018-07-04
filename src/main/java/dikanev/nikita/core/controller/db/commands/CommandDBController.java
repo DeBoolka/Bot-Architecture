@@ -1,5 +1,6 @@
 package dikanev.nikita.core.controller.db.commands;
 
+import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.model.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +98,7 @@ public class CommandDBController {
     }
 
     //Получение id команды.
-    public int getId(String name) throws SQLException {
+    public int getId(String name) throws SQLException, NotFoundException {
         String sql = "SELECT id " +
                 "FROM commands " +
                 "WHERE name = ? " +
@@ -114,7 +115,7 @@ public class CommandDBController {
 
         res.close();
         if (id < 0) {
-            throw new SQLException();
+            throw new NotFoundException("Not found command");
         }
 
         return id;

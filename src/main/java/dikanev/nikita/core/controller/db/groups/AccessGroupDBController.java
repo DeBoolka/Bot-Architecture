@@ -1,5 +1,9 @@
 package dikanev.nikita.core.controller.db.groups;
 
+import dikanev.nikita.core.api.exceptions.NotFoundException;
+import dikanev.nikita.core.controller.db.commands.CommandDBController;
+import dikanev.nikita.core.controller.db.users.UserDBController;
+import dikanev.nikita.core.controller.users.UserController;
 import dikanev.nikita.core.model.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +27,16 @@ public class AccessGroupDBController {
     //Устанавливает доступ к команде для группы
     public boolean createAccess(int idGroup, int idCommand, boolean privilege) throws SQLException {
         String sql = "INSERT INTO groups_privilege(id_group, id_command, access) " +
-                "VAlUES(?, ?, ?);";
+                "VAlUES(?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "   access = ?";
+
 
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setInt(2, idCommand);
         prStatement.setBoolean(3, privilege);
+        prStatement.setBoolean(4, privilege);
         int res = prStatement.executeUpdate();
 
         prStatement.close();
@@ -54,42 +62,62 @@ public class AccessGroupDBController {
         return res > 0;
     }
 
-    //Проверяет доступна ли комманда пользователю
-    public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
-        String sql = "SELECT access " +
-                "FROM users LEFT JOIN groups_privilege USING(id_group) " +
-                "WHERE users.id = ? AND groups_privilege.id_command = ? " +
-                "LIMIT 1;";
-
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
-        prStatement.setInt(1, idUser);
-        prStatement.setInt(2, idCommand);
-        ResultSet res = prStatement.executeQuery();
-
-        boolean access = false;
-        while (res.next()) {
-            access = res.getBoolean("access");
+    //Устанавливает доступ к команде для группы
+    public boolean createAccess(int idGroup, String command, boolean privilege) throws SQLException {
+        int idCommand;
+        try {
+            idCommand = CommandDBController.getInstance().getId(command);
+        } catch (NotFoundException e) {
+            LOG.debug("Create new command: " + command);
+            idCommand = CommandDBController.getInstance().createCommand(command);
         }
 
-        res.close();
-        return access;
+        return createAccess(idGroup, idCommand, privilege);
+    }
+
+    //Проверяет доступна ли комманда пользователю
+    public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
+        int idGroup = UserDBController.getInstance().getGroup(idUser);
+        if (idGroup == -1) {
+            return false;
+        }
+
+        return hasAccessGroup(idGroup, idCommand);
     }
 
     //Проверяет доступна ли комманда группе
     public boolean hasAccessGroup(int idGroup, int idCommand) throws SQLException {
-        String sql = "SELECT access " +
-                "FROM groups_privilege " +
-                "WHERE id_group = ? AND id_command = ? " +
-                "LIMIT 1";
+        //Ищем имя команды
+        String commandName = CommandDBController.getInstance().getName(idCommand);
+        if (commandName == null) {
+            return false;
+        }
+
+        return hasAccessGroup(idGroup, commandName);
+    }
+
+    public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
+        String sql = "SELECT access, id_command, commands.name " +
+                "FROM groups_privilege LEFT JOIN commands ON id_command = commands.id " +
+                "WHERE id_group = ?";
 
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
-        prStatement.setInt(2, idCommand);
         ResultSet res = prStatement.executeQuery();
 
+        //Ищем доступ
         boolean access = false;
+        boolean dbAccess;
+        String dbCommandName;
         while (res.next()) {
-            access = res.getBoolean("access");
+            dbAccess = res.getBoolean("access");
+            dbCommandName = res.getString("name");
+            if (!dbAccess && commandName.indexOf(dbCommandName) == 0) {
+                access = false;
+                break;
+            } else if (!access && dbAccess && commandName.indexOf(dbCommandName) == 0) {
+                access = true;
+            }
         }
 
         res.close();

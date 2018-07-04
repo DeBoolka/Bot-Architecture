@@ -47,4 +47,21 @@ public class CommandStorage {
     public Command getCommand(String command){
         return commands.get(command);
     }
+
+    public int getIdCommand(String command) {
+        Command commandObj = commands.get(command);
+        if (commandObj == null) {
+            return -1;
+        }
+        return commandObj.getId();
+    }
+
+    public String getNameCommand(int id) {
+        for (Map.Entry<String, Command> entry : commands.entrySet()) {
+            if (entry.getValue().getId() == id) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }

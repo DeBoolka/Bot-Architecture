@@ -206,4 +206,23 @@ public class UserDBController {
     public String getHash(String text) {
         return Hashing.sha256().hashString(text, StandardCharsets.UTF_8).toString();
     }
+
+    public int getGroup(int idUser) throws SQLException {
+        String sql = "SELECT id_group " +
+                "FROM users " +
+                "WHERE id = ? " +
+                "LIMIT 1;";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idUser);
+        ResultSet res = prStatement.executeQuery();
+
+        int idGroup = -1;
+        while (res.next()) {
+            idGroup = res.getInt("id_group");
+        }
+        res.close();
+
+        return idGroup;
+    }
 }

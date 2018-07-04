@@ -1,5 +1,6 @@
 package dikanev.nikita.core.controller.groups;
 
+import dikanev.nikita.core.controller.commands.CommandController;
 import dikanev.nikita.core.controller.db.groups.AccessGroupDBController;
 import dikanev.nikita.core.model.storage.DBStorage;
 import org.slf4j.Logger;
@@ -30,6 +31,10 @@ public class AccessGroupController {
         return AccessGroupDBController.getInstance().createAccess(idGroup, idCommands, privilege);
     }
 
+    public boolean createAccess(int idGroup, String command, boolean privilege) throws SQLException{
+        return AccessGroupDBController.getInstance().createAccess(idGroup, command, privilege);
+    }
+
     //Проверяет доступна ли комманда пользователю
     public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
         return AccessGroupDBController.getInstance().hasAccessUser(idUser, idCommand);
@@ -37,7 +42,16 @@ public class AccessGroupController {
 
     //Проверяет доступна ли комманда группе
     public boolean hasAccessGroup(int idGroup, int idCommand) throws SQLException {
-        return AccessGroupDBController.getInstance().hasAccessGroup(idGroup, idCommand);
+        String commandName = CommandController.getInstance().getName(idCommand);
+        if (commandName != null) {
+            return AccessGroupDBController.getInstance().hasAccessGroup(idGroup, commandName);
+        }
+        return false;
+    }
+
+    //Проверяет доступна ли комманда группе
+    public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
+        return AccessGroupDBController.getInstance().hasAccessGroup(idGroup, commandName);
     }
 
     //Изменяет доступ к команде для группы
