@@ -2,7 +2,9 @@ package dikanev.nikita.core.model.commands;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.NoAccessException;
+import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
+import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controller.commands.CommandController;
 import org.slf4j.Logger;
@@ -51,7 +53,12 @@ public abstract class Command {
             }
         }
 
-        return work(user, args);
+        try {
+            return work(user, args);
+        } catch (Exception e) {
+            LOG.warn("Unknown error in the command: ", e);
+            return new ExceptionObject(new UnidentifiedException(e.getMessage()));
+        }
     }
 
     //Перегружаемый метод с работой команды

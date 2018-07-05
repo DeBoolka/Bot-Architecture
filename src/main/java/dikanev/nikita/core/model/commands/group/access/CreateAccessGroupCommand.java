@@ -1,12 +1,10 @@
-package dikanev.nikita.core.model.commands.group;
+package dikanev.nikita.core.model.commands.group.access;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
-import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
-import dikanev.nikita.core.controller.commands.CommandController;
 import dikanev.nikita.core.controller.groups.AccessGroupController;
 import dikanev.nikita.core.model.commands.Command;
 import org.slf4j.Logger;

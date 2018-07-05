@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class AccessGroupDBController {
 
@@ -122,6 +123,47 @@ public class AccessGroupDBController {
 
         res.close();
         return access;
+    }
+
+    //Возвращает доступность команд для группы
+    public Map<String, Boolean> getAccessGroup(int idGroup, List<String> commandsName) throws SQLException {
+        commandsName = new LinkedList<>(commandsName);
+        Map<String, Boolean> commandsAccess = new HashMap<>();
+        commandsName.forEach(e -> commandsAccess.put(e, false));
+
+        String sql = "SELECT access, id_command, commands.name " +
+                "FROM groups_privilege LEFT JOIN commands ON id_command = commands.id " +
+                "WHERE id_group = ?";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setInt(1, idGroup);
+        ResultSet res = prStatement.executeQuery();
+
+        //Ищем доступ для каждой команды
+        boolean dbAccess;
+        String dbCommandName;
+        Stack<Integer> deleteIndex = new Stack<>();
+        while (res.next()) {
+            dbAccess = res.getBoolean("access");
+            dbCommandName = res.getString("name");
+            for(int i = 0; i < commandsName.size(); i++){
+                if (!dbAccess && commandsName.get(i).indexOf(dbCommandName) == 0) {
+                    commandsAccess.put(commandsName.get(i), false);
+                    deleteIndex.push(i);
+                } else if (dbAccess && commandsName.get(i).indexOf(dbCommandName) == 0) {
+                    commandsAccess.put(commandsName.get(i), true);
+                }
+            }
+
+            //Удаление из списка команд, которые точно уже false
+            while (!deleteIndex.isEmpty()) {
+                commandsName.remove((int) deleteIndex.pop());
+            }
+
+        }
+
+        res.close();
+        return commandsAccess;
     }
 
     //Изменяет доступ к команде для группы

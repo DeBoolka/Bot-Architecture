@@ -1,4 +1,4 @@
-package dikanev.nikita.core.model.commands.group;
+package dikanev.nikita.core.model.commands.group.access;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.NotFoundException;

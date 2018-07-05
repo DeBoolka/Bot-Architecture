@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class AccessGroupController {
     private static final Logger LOG = LoggerFactory.getLogger(AccessGroupController.class);
@@ -52,6 +54,11 @@ public class AccessGroupController {
     //Проверяет доступна ли комманда группе
     public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
         return AccessGroupDBController.getInstance().hasAccessGroup(idGroup, commandName);
+    }
+
+    //Возвращает доступность команд для группы
+    public Map<String, Boolean> getAccessGroup(int idGroup, List<String> commandsName) throws SQLException {
+        return AccessGroupDBController.getInstance().getAccessGroup(idGroup, commandsName);
     }
 
     //Изменяет доступ к команде для группы
