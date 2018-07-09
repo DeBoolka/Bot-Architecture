@@ -76,6 +76,23 @@ public class AccessGroupDBController {
         return createAccess(idGroup, idCommand, privilege);
     }
 
+    //Устанавливает доступ к команде для группы
+    public boolean createAccess(int idGroup, String[] nameCommands, boolean privilege) throws SQLException {
+        Integer[] idCommands = new Integer[nameCommands.length];
+        try {
+            for (int i = 0; i < nameCommands.length; i++) {
+                idCommands[i] = CommandDBController.getInstance().getId(nameCommands[i]);
+            }
+        } catch (NotFoundException e) {
+            LOG.debug("Create new command array name: ", e);
+            for (int i = 0; i < nameCommands.length; i++) {
+                idCommands[i] = CommandDBController.getInstance().createCommand(nameCommands[i]);
+            }
+        }
+
+        return createAccess(idGroup, idCommands, privilege);
+    }
+
     //Проверяет доступна ли комманда пользователю
     public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
         int idGroup = UserDBController.getInstance().getGroup(idUser);
@@ -197,4 +214,5 @@ public class AccessGroupDBController {
         prStatement.close();
         return res > 0;
     }
+
 }

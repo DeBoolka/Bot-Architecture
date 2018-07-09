@@ -69,14 +69,6 @@ public class Application {
     }
 
     private static void start() throws Exception{
-
-        try {
-            System.out.println(CommandStorage.getInstance().getCommand("user/register").run(null));
-            Command command = new DeleteUserCommand(2);
-            System.out.println(command.getId());
-        } catch (NoAccessException e) {
-            LOG.warn(e.getMessage());
-        }
     }
 
     static public void setShutdownFlag() {

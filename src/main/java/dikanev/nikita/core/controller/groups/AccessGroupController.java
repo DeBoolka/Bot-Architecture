@@ -37,6 +37,10 @@ public class AccessGroupController {
         return AccessGroupDBController.getInstance().createAccess(idGroup, command, privilege);
     }
 
+    public boolean createAccess(int idGroup, String[] nameCommands, boolean privilege) throws SQLException {
+        return AccessGroupDBController.getInstance().createAccess(idGroup, nameCommands, privilege);
+    }
+
     //Проверяет доступна ли комманда пользователю
     public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
         return AccessGroupDBController.getInstance().hasAccessUser(idUser, idCommand);

@@ -26,8 +26,8 @@ public class CreateAccessGroupCommand extends Command {
         int idGroup;
         int idCommand = -1;
         Integer[] idCommands = null;
-        String nameCommand = null;
         String[] idCommandsArr = args.get("id_command");
+        String[] nameCommands = args.get("name");
         boolean access;
         try {
             idGroup = getInt("id_group", args);
@@ -40,8 +40,6 @@ public class CreateAccessGroupCommand extends Command {
                 } else {
                     idCommand = getInt("id_command", args);
                 }
-            } else {
-                nameCommand = getString("name", args);
             }
             access = Boolean.valueOf(getString("access", args));
         } catch (Exception e) {
@@ -53,8 +51,8 @@ public class CreateAccessGroupCommand extends Command {
             if (idCommands != null) {
                 response = AccessGroupController.getInstance().createAccess(idGroup, idCommands, access);
             } else {
-                if (nameCommand != null) {
-                    response = AccessGroupController.getInstance().createAccess(idGroup, nameCommand, access);
+                if (nameCommands != null) {
+                    response = AccessGroupController.getInstance().createAccess(idGroup, nameCommands, access);
                 } else if (idCommand >= 0) {
                     response = AccessGroupController.getInstance().createAccess(idGroup, idCommand, access);
                 } else {
