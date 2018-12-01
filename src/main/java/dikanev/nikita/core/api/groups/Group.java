@@ -1,8 +1,7 @@
 package dikanev.nikita.core.api.groups;
 
-import dikanev.nikita.core.controller.db.groups.GroupDBController;
-import dikanev.nikita.core.controller.groups.AccessGroupController;
-import dikanev.nikita.core.controller.groups.GroupController;
+import dikanev.nikita.core.controllers.groups.AccessGroupController;
+import dikanev.nikita.core.controllers.groups.GroupController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

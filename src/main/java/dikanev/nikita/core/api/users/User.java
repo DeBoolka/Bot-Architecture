@@ -2,8 +2,8 @@ package dikanev.nikita.core.api.users;
 
 import dikanev.nikita.core.api.exceptions.NoAccessException;
 import dikanev.nikita.core.api.groups.Group;
-import dikanev.nikita.core.controller.groups.AccessGroupController;
-import dikanev.nikita.core.controller.users.UserController;
+import dikanev.nikita.core.controllers.groups.AccessGroupController;
+import dikanev.nikita.core.controllers.users.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

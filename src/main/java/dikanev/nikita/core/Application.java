@@ -1,13 +1,9 @@
 package dikanev.nikita.core;
 
-import dikanev.nikita.core.api.exceptions.NoAccessException;
-import dikanev.nikita.core.model.commands.Command;
-import dikanev.nikita.core.model.commands.user.DeleteUserCommand;
-import dikanev.nikita.core.model.jobs.Job;
-import dikanev.nikita.core.model.storage.CommandStorage;
-import dikanev.nikita.core.model.storage.DBStorage;
-import dikanev.nikita.core.model.storage.JobStorage;
-import dikanev.nikita.core.model.storage.ServerStorage;
+import dikanev.nikita.core.logic.jobs.Job;
+import dikanev.nikita.core.service.storage.DBStorage;
+import dikanev.nikita.core.service.storage.JobStorage;
+import dikanev.nikita.core.service.storage.ServerStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
