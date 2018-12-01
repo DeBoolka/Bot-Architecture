@@ -1,6 +1,5 @@
 package dikanev.nikita.core.model.commands.group;
 
-import com.sun.istack.NotNull;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
