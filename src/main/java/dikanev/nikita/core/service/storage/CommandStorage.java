@@ -1,20 +1,21 @@
 package dikanev.nikita.core.service.storage;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.logic.commands.check.CheckWorkCommand;
-import dikanev.nikita.core.logic.commands.group.*;
-import dikanev.nikita.core.logic.commands.group.access.CreateAccessGroupCommand;
-import dikanev.nikita.core.logic.commands.group.access.DeleteAccessGroupCommand;
-import dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand;
-import dikanev.nikita.core.logic.commands.user.DeleteUserCommand;
-import dikanev.nikita.core.logic.commands.user.GetUserCommand;
-import dikanev.nikita.core.logic.commands.user.NewUserCommand;
-import dikanev.nikita.core.logic.commands.user.create.CreateTokenCommand;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandStorage {
+    private static final Logger LOG = LoggerFactory.getLogger(CommandStorage.class);
+
     private static CommandStorage instance = new CommandStorage();
 
     private final Map<String, Command> commands = new HashMap<>();
@@ -24,24 +25,47 @@ public class CommandStorage {
     }
 
     private CommandStorage() {
-        initCommand();
     }
 
     //Инициализация команд
-    private void initCommand() {
-        Map<Integer, String> commandBD = Command.getCommands();
+    public void init(String pathToCommandsRoute) {
+        getCommands(pathToCommandsRoute).forEach((key, val) ->{
+            try {
+                addCommand(val[0], (Command) Class.forName(val[1]).getDeclaredConstructor(int.class).newInstance(key));
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+            }
+        });
+    }
 
-        addCommand(commandBD.get(1), new NewUserCommand(1));
-        addCommand(commandBD.get(2), new DeleteUserCommand(2));
-        addCommand(commandBD.get(3), new CreateTokenCommand(3));
-        addCommand(commandBD.get(4), new GetUserCommand(4));
-        addCommand(commandBD.get(5), new CreateGroupCommand(5));
-        addCommand(commandBD.get(6), new DeleteGroupCommand(6));
-        addCommand(commandBD.get(7), new GetGroupCommand(7));
-        addCommand(commandBD.get(8), new CreateAccessGroupCommand(8));
-        addCommand(commandBD.get(9), new DeleteAccessGroupCommand(9));
-        addCommand(commandBD.get(10), new CheckWorkCommand(10));
-        addCommand(commandBD.get(11), new GetAccessGroupCommand(11));
+    private Map<Integer, String[]> getCommands(String pathToCommandsRoute) {
+        JsonArray commandsJson;
+        final Gson gson = new Gson();
+        final Map<Integer, String[]> commands = new HashMap<>();
+
+        try (FileReader scanner = new FileReader(pathToCommandsRoute)) {
+            commandsJson = gson.fromJson(scanner, JsonArray.class);
+
+            commandsJson.iterator().forEachRemaining(command -> {
+                JsonObject jo = command.getAsJsonObject();
+                commands.put(jo.get("id").getAsInt()
+                        , new String[]{jo.get("route").getAsString()
+                                     , jo.get("class").getAsString()
+                                     , jo.get("name").getAsString()});
+            });
+        } catch (IOException e) {
+            LOG.error("Commands route file not found.");
+            return new HashMap<>();
+        }
+
+        commands.forEach((k, v) -> {
+            if (k == null || v[0] == null || v[1] == null) {
+                throw new IllegalStateException("Commands route file is corrupt");
+            }
+        });
+
+        return commands;
     }
 
     public void addCommand(String name, Command command) {
@@ -67,5 +91,9 @@ public class CommandStorage {
             }
         }
         return null;
+    }
+
+    public Map<String, Command> getCommands() {
+        return commands;
     }
 }

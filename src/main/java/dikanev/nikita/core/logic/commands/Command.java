@@ -89,6 +89,7 @@ public abstract class Command {
     }
 
     //Получение всех команд
+    //TODO: Удалить
     public static Map<Integer, String> getCommands(){
         try {
             return CommandController.getInstance().getCommands();

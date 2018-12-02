@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO: Удалить или переделать. Он теперь не нужен.
 public class CommandDBController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommandDBController.class);

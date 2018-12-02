@@ -27,7 +27,7 @@ public class DBStorage {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            LOG.warn("Not found class: com.mysql.cj.jdbc.Driver");
+            LOG.error("Not found class: com.mysql.cj.jdbc.Driver");
         }
     }
 
