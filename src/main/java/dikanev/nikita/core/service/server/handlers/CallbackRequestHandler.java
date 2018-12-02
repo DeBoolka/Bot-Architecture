@@ -1,5 +1,6 @@
 package dikanev.nikita.core.service.server.handlers;
 
+import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.NoAccessException;
 import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
@@ -47,6 +48,9 @@ public class CallbackRequestHandler extends HttpServlet {
                 pr.write(responseObject.getJson());
             } catch (NoAccessException e) {
                 pr.write(new ExceptionObject(e).getJson());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
+                pr.write(new ExceptionObject(new ApiException(500, "Server error.")).getJson());
             }
         } catch (IOException ex) {
             LOG.warn("The client could not be contacted.");

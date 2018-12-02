@@ -40,7 +40,10 @@ public class DBStorage {
         this.login = login;
         this.password = password;
 
-        connect();
+        try {
+            connect();
+        } catch (IllegalStateException ignore) {
+        }
     }
 
     //Подключение к БД
@@ -60,7 +63,7 @@ public class DBStorage {
     }
 
     public Connection getConnection() throws SQLException{
-        if(connection.isValid(30)){
+        if(connection != null && connection.isValid(30)){
             return connection;
         }
 
