@@ -7,11 +7,10 @@ import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.commands.CommandController;
+import dikanev.nikita.core.service.storage.CommandStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,8 +48,10 @@ public abstract class Command {
         } else {
             user = new User(hash);
             if (!user.hasRightByGroup(getId())) {
-                throw new NoAccessException("Operation id " + getId());
+                throw new NoAccessException("Operation id " + getId() + ", name - "
+                        + CommandStorage.getInstance().getNameCommand(getId()));
             }
+
         }
 
         try {
@@ -75,29 +76,6 @@ public abstract class Command {
 
     public int getId(){
         return id;
-    }
-
-    //Получение имени команды по id
-    public static String getName(int id) {
-        try {
-            return CommandController.getInstance().getName(id);
-        } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
-        }
-
-        return "";
-    }
-
-    //Получение всех команд
-    //TODO: Удалить
-    public static Map<Integer, String> getCommands(){
-        try {
-            return CommandController.getInstance().getCommands();
-        } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
-        }
-
-        return new HashMap<>();
     }
 
     //Возращает одно слово из мапа

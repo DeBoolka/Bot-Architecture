@@ -114,30 +114,19 @@ public class AccessGroupDBController {
     }
 
     public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
-        String sql = "SELECT access, id_command, commands.name " +
-                "FROM groups_privilege LEFT JOIN commands ON id_command = commands.id " +
-                "WHERE id_group = ?";
+        String sql = "SELECT HAS_ACCESS(?, ?)";
 
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
+        prStatement.setString(2, commandName);
         ResultSet res = prStatement.executeQuery();
 
-        //Ищем доступ
         boolean access = false;
-        boolean dbAccess;
-        String dbCommandName;
-        while (res.next()) {
-            dbAccess = res.getBoolean("access");
-            dbCommandName = res.getString("name");
-            if (!dbAccess && commandName.indexOf(dbCommandName) == 0) {
-                access = false;
-                break;
-            } else if (!access && dbAccess && commandName.indexOf(dbCommandName) == 0) {
-                access = true;
-            }
+        if (res.next()) {
+            access = res.getBoolean(1);
         }
-
         res.close();
+
         return access;
     }
 
@@ -148,7 +137,8 @@ public class AccessGroupDBController {
         commandsName.forEach(e -> commandsAccess.put(e, false));
 
         String sql = "SELECT access, id_command, commands.name " +
-                "FROM groups_privilege LEFT JOIN commands ON id_command = commands.id " +
+                "FROM groups_privilege " +
+                "   LEFT JOIN commands ON id_command = commands.id " +
                 "WHERE id_group = ?";
 
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
@@ -158,24 +148,21 @@ public class AccessGroupDBController {
         //Ищем доступ для каждой команды
         boolean dbAccess;
         String dbCommandName;
-        Stack<Integer> deleteIndex = new Stack<>();
+
         while (res.next()) {
             dbAccess = res.getBoolean("access");
             dbCommandName = res.getString("name");
-            for(int i = 0; i < commandsName.size(); i++){
-                if (!dbAccess && commandsName.get(i).indexOf(dbCommandName) == 0) {
-                    commandsAccess.put(commandsName.get(i), false);
-                    deleteIndex.push(i);
-                } else if (dbAccess && commandsName.get(i).indexOf(dbCommandName) == 0) {
-                    commandsAccess.put(commandsName.get(i), true);
+
+            for(int i = commandsName.size() - 1; i >= 0; i--){
+                String cn = commandsName.get(i);
+
+                if (!dbAccess && cn.indexOf(dbCommandName) == 0) {
+                    commandsAccess.put(cn, false);
+                    commandsName.remove(i);
+                } else if (dbAccess && cn.indexOf(dbCommandName) == 0) {
+                    commandsAccess.put(cn, true);
                 }
             }
-
-            //Удаление из списка команд, которые точно уже false
-            while (!deleteIndex.isEmpty()) {
-                commandsName.remove((int) deleteIndex.pop());
-            }
-
         }
 
         res.close();

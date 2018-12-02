@@ -1,5 +1,6 @@
 package dikanev.nikita.core.controllers.db.groups;
 
+import dikanev.nikita.core.controllers.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class GroupDBController {
             throw new IllegalStateException("Failed to create a group with the name: " + name);
         }
 
-        return getLastId();
+        return SQLHelper.getLastId();
     }
 
     //Создание группы
@@ -109,19 +110,5 @@ public class GroupDBController {
 
         res.close();
         return nameGroup;
-    }
-
-    //Получение последнего вставленного id
-    private int getLastId() throws SQLException{
-        String sql = "SELECT LAST_INSERT_ID() AS id";
-        int lastId = -1;
-        Statement statement = DBStorage.getInstance().getConnection().createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()) {
-            lastId = resultSet.getInt("id");
-        }
-
-        statement.close();
-        return lastId;
     }
 }

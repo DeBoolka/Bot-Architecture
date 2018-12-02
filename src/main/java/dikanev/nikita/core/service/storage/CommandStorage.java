@@ -19,6 +19,7 @@ public class CommandStorage {
     private static CommandStorage instance = new CommandStorage();
 
     private final Map<String, Command> commands = new HashMap<>();
+    private final Map<Integer, String> cacheNameCommand = new HashMap<>();
 
     public static CommandStorage getInstance() {
         return instance;
@@ -33,7 +34,6 @@ public class CommandStorage {
             try {
                 addCommand(val[0], (Command) Class.forName(val[1]).getDeclaredConstructor(int.class).newInstance(key));
             } catch (Exception e) {
-                e.printStackTrace();
                 LOG.error(e.getMessage());
             }
         });
@@ -70,10 +70,15 @@ public class CommandStorage {
 
     public void addCommand(String name, Command command) {
         commands.put(name, command);
+        cacheNameCommand.put(command.getId(), name);
     }
 
     public Command getCommand(String command){
         return commands.get(command);
+    }
+
+    public Map<String, Command> getCommands() {
+        return commands;
     }
 
     public int getIdCommand(String command) {
@@ -85,15 +90,6 @@ public class CommandStorage {
     }
 
     public String getNameCommand(int id) {
-        for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            if (entry.getValue().getId() == id) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
-    public Map<String, Command> getCommands() {
-        return commands;
+        return cacheNameCommand.get(id);
     }
 }

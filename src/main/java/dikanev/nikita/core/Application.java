@@ -1,6 +1,7 @@
 package dikanev.nikita.core;
 
 import dikanev.nikita.core.logic.jobs.Job;
+import dikanev.nikita.core.service.storage.CommandStorage;
 import dikanev.nikita.core.service.storage.DBStorage;
 import dikanev.nikita.core.service.storage.JobStorage;
 import dikanev.nikita.core.service.storage.ServerStorage;
@@ -21,9 +22,9 @@ public class Application {
 
     public static void  main(String... args) throws Exception{
 
-        daemonize();
+//        daemonize();
 
-        registerShutdownHook();
+//        registerShutdownHook();
 
         init();
 
@@ -45,6 +46,8 @@ public class Application {
         String loginDB = properties.getProperty("db.login");
         String passwordDB = properties.getProperty("db.password");
         DBStorage.getInstance().init(urlDB, loginDB, passwordDB);
+
+        CommandStorage.getInstance().init(Application.class.getResource("/commands_route.json").getPath());
 
         int portServer = Integer.parseInt(properties.getProperty("server.port", "9090"));
         ServerStorage.getInstance().start(portServer);

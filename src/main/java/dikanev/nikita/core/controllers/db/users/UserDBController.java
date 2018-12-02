@@ -1,6 +1,7 @@
 package dikanev.nikita.core.controllers.db.users;
 
 import com.google.common.hash.Hashing;
+import dikanev.nikita.core.controllers.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +41,7 @@ public class UserDBController {
             throw new IllegalStateException("Failed to create a user");
         }
 
-        sql = "SELECT LAST_INSERT_ID() AS id";
-        int lastId = -1;
-        Statement statement = DBStorage.getInstance().getConnection().createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()) {
-            lastId = resultSet.getInt("id");
-        }
-
-        statement.close();
-        return lastId;
+        return SQLHelper.getLastId();
     }
 
     //Создание человека

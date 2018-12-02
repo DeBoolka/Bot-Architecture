@@ -1,8 +1,68 @@
 [
   {
     "id": 1,
-    "route": "/test",
+    "route": "user/register",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.NewUserCommand"
-  }
+  },
+  {
+    "id": 2,
+    "route": "user/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.DeleteUserCommand"
+  },
+  {
+    "id": 3,
+    "route": "user/create/token",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.create.CreateTokenCommand"
+  },
+  {
+    "id": 4,
+    "route": "user/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.GetUserCommand"
+  },
+  {
+    "id": 5,
+    "route": "group/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.CreateGroupCommand"
+  },
+  {
+    "id": 6,
+    "route": "group/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.DeleteGroupCommand"
+  },
+  {
+    "id": 7,
+    "route": "group/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.GetGroupCommand"
+  },
+  {
+    "id": 8,
+    "route": "group/access/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.CreateAccessGroupCommand"
+  },
+  {
+    "id": 9,
+    "route": "group/access/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.DeleteAccessGroupCommand"
+  },
+  {
+    "id": 10,
+    "route": "check/work",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.check.CheckWorkCommand"
+  },
+  {
+  "id": 11,
+  "route": "group/access/get",
+  "name": "Test Command",
+  "class": "dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand"
+}
 ]
