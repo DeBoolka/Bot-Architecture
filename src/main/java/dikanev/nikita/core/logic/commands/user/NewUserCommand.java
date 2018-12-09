@@ -23,15 +23,24 @@ public class NewUserCommand extends Command {
         int idGroup;
         String sName;
         String name;
+        String email;
+        String password;
         try {
             idGroup = args.getIntF("id_group");
             sName = args.getFOrDefault("s_name", "");
             name = args.getFOrDefault("name", "");
+            email = args.getFOrDefault("email", "");
+            password = args.getF("password");
         } catch (Exception e) {
             return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }
 
-        if (sName.equals("") || name.equals("") || sName.length() > 30 || name.length() > 30) {
+        if (sName.equals("")
+                || name.equals("")
+                || email.equals("")
+                || email.length() > 127
+                || sName.length() > 100
+                || name.length() > 100) {
             return new ExceptionObject(new InvalidParametersException("Incorrect surname or name param."));
         } else if(idGroup <= 0) {
             return new ExceptionObject(new InvalidParametersException("Incorrect id group param."));
@@ -39,16 +48,7 @@ public class NewUserCommand extends Command {
 
         int idUser;
         try {
-            try {
-                idUser = args.getIntF("id");
-                idUser = UserController.getInstance().createUser(idUser, sName, name, idGroup);
-            } catch (Exception e) {
-                if (!args.contains("id")) {
-                    idUser = UserController.getInstance().createUser(sName, name, idGroup);
-                } else {
-                    return new ExceptionObject(new InvalidParametersException("Incorrect id param."));
-                }
-            }
+            idUser = UserController.getInstance().registerUser(email, sName, name, idGroup, password);
         } catch (SQLException e) {
             return new ExceptionObject(new InvalidParametersException("Create a user in the database."));
         }

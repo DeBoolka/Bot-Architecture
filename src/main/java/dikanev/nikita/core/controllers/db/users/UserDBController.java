@@ -25,6 +25,26 @@ public class UserDBController {
     }
 
     //Создание человека
+    public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
+        String sql = "SELECT REGISTER_USER(?, ?, ?, ?, ?)";
+
+        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setString(1, email);
+        prStatement.setString(2, sname);
+        prStatement.setString(3, name);
+        prStatement.setInt(4, idGroup);
+        prStatement.setString(5, password);
+
+        ResultSet res = prStatement.executeQuery();
+        int userId = -1;
+        while (res.next()) {
+            userId = res.getInt(1);
+        }
+
+        return userId;
+    }
+
+    //Создание человека
     public int createUser(String sName, String name, int idGroup) throws SQLException {
         String sql = "INSERT INTO users(id_group, s_name, name) " +
                 "VALUES (?, ?, ?)";

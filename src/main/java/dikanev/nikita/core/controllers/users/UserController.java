@@ -20,6 +20,11 @@ public class UserController {
     }
 
     //Создание человека
+    public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
+        return UserDBController.getInstance().registerUser(email, sname, name, idGroup, password);
+    }
+
+    //Создание человека
     public int createUser(String sName, String name, int idGroup) throws SQLException {
         return UserDBController.getInstance().createUser(sName, name, idGroup);
     }
