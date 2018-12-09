@@ -8,6 +8,7 @@ import dikanev.nikita.core.api.objects.GroupObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.groups.GroupController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -18,12 +19,12 @@ public class GetGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
+    protected ApiObject work(User user, Parameter args) {
         int idGroup;
         try {
-            idGroup = getInt("id", args);
-        } catch (InvalidParametersException e) {
-            return new ExceptionObject(new InvalidParametersException("Insufficient number of parameters."));
+            idGroup = args.getIntF("id");
+        } catch (Exception e) {
+            return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }
 
         String name;

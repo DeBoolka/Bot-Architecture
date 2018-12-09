@@ -6,6 +6,7 @@ import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.HttpGetParameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class CallbackRequestHandler extends HttpServlet {
                 if (responseCommand == null) {
                     responseObject = new ExceptionObject(new NotFoundException("Command not found"));
                 } else {
-                    responseObject = responseCommand.run(req.getParameterMap());
+                    responseObject = responseCommand.run(new HttpGetParameter(req.getParameterMap()));
                 }
 
                 pr.write(responseObject.getJson());

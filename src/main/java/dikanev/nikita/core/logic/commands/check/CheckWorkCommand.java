@@ -4,6 +4,7 @@ import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class CheckWorkCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
+    protected ApiObject work(User user, Parameter args) {
         return new MessageObject("Ok");
     }
 }

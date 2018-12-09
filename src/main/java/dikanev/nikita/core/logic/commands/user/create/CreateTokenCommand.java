@@ -7,6 +7,7 @@ import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.users.UserController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -18,12 +19,12 @@ public class CreateTokenCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
+    protected ApiObject work(User user, Parameter args) {
         int id;
         try {
-            id = getInt("id", args);
-        } catch (InvalidParametersException e) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect id parameters."));
+            id =  args.getIntF("id");
+        } catch (Exception e) {
+            return new ExceptionObject(new InvalidParametersException("Incorrect id param."));
         }
 
         try {

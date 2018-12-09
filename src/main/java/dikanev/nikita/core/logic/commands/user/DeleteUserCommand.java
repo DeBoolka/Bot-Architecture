@@ -7,6 +7,7 @@ import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.users.UserController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -18,24 +19,17 @@ public class DeleteUserCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
-        String[] id = args.get("id");
-        if (id == null) {
-            return new ExceptionObject(new InvalidParametersException("Insufficient number of parameters."));
-        } else if (id[0].equals("")) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect id parameters."));
-        }
-
-        int idInt;
+    protected ApiObject work(User user, Parameter args) {
+        int id;
         try {
-            idInt = Integer.parseInt(id[0]);
-        } catch (NumberFormatException e) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect id user parameters."));
+            id = args.getIntF("id");
+        } catch (Exception e) {
+            return new ExceptionObject(new InvalidParametersException("Incorrect id parameter."));
         }
 
 
         try {
-            boolean hasDelete = UserController.getInstance().deleteUser(idInt);
+            boolean hasDelete = UserController.getInstance().deleteUser(id);
             if (hasDelete) {
                 return new MessageObject("Ok");
             } else {

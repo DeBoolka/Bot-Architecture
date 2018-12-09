@@ -154,7 +154,7 @@ public interface Parameter{
      * @param params название параметров
      * @return {@code true}, если есть параметры
      */
-    boolean containsAll(String[] params);
+    boolean containsAll(String... params);
 
     /**
      * Проверяет, что все значения присутствуют в параметре

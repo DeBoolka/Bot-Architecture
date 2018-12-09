@@ -6,6 +6,7 @@ import dikanev.nikita.core.api.objects.*;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.groups.AccessGroupController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,22 +23,22 @@ public class GetAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
+    protected ApiObject work(User user, Parameter args) {
         int idGroup;
-        String[] commands;
+        List<String> commands;
         try {
-            idGroup = getInt("id_group", args);
+            idGroup = args.getIntF("id_group");
             commands = args.get("cmd");
             if (commands == null) {
-                return new ExceptionObject(new InvalidParametersException("cmd"));
+                return new ExceptionObject(new InvalidParametersException("Parameter cmd not found"));
             }
-        } catch (InvalidParametersException e) {
-            return new ExceptionObject(e);
+        } catch (NoSuchFieldException e) {
+            return new ExceptionObject(new InvalidParametersException("Parameter id_group not found"));
         }
 
         Map<String, Boolean> commandsAccess;
         try {
-            commandsAccess = AccessGroupController.getInstance().getAccessGroup(idGroup, List.of(commands));
+            commandsAccess = AccessGroupController.getInstance().getAccessGroup(idGroup, commands);
         } catch (SQLException e) {
             return new ExceptionObject(new UnidentifiedException(e.getMessage()));
         }
