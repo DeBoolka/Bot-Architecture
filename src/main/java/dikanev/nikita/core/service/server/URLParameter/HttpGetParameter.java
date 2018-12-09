@@ -43,11 +43,6 @@ public class HttpGetParameter implements Parameter {
         return mapToGetString(parameters);
     }
 
-    @Override
-    public String getContent(String param) {
-        return listToGetString(param, parameters.get(param));
-    }
-
     public List<String> get(String parameter) {
         return parameters.get(parameter);
     }
@@ -107,6 +102,32 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
+    public Parameter set(String param, String val) {
+        parameters.put(param, new ArrayList<>(List.of(val)));
+        return this;
+    }
+
+    @Override
+    public Parameter set(String param, List<String> val) {
+        parameters.put(param, val);
+        return this;
+    }
+
+    @Override
+    public Parameter add(String param, String val) {
+        List<String> lst = parameters.computeIfAbsent(param, k -> new ArrayList<>());
+        lst.add(val);
+        return this;
+    }
+
+    @Override
+    public Parameter add(String param, List<String> val) {
+        List<String> lst = parameters.computeIfAbsent(param, k -> new ArrayList<>());
+        lst.addAll(val);
+        return this;
+    }
+
+    @Override
     public boolean contains(String param) {
         return parameters.containsKey(param);
     }
@@ -144,6 +165,11 @@ public class HttpGetParameter implements Parameter {
         }
 
         return lst.contains(val);
+    }
+
+    @Override
+    public boolean containsVal(String param, int val) {
+        return containsVal(param, String.valueOf(val));
     }
 
     @Override

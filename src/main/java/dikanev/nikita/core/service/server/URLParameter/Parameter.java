@@ -4,10 +4,18 @@ import java.util.*;
 
 public interface Parameter{
 
+    /**
+     *
+     * @param parameter название параметра
+     * @return Подпараметр типа {@code Parameter}
+     */
     Parameter getParameter(String parameter);
 
+    /**
+     *
+     * @return представление ввиде типа параметра
+     */
     String getContent();
-    String getContent(String param);
 
     /**
      *
@@ -90,6 +98,38 @@ public interface Parameter{
     int getIntFOrDefault(String param, int def);
 
     /**
+     * Устанавливает значение параметра. Старое значение, если оно было - удаляет
+     * @param param параметр
+     * @param val значение параметра
+     * @return Новый объект типа {@code Parameter}
+     */
+    Parameter set(String param, String val);
+
+    /**
+     * Устанавливает значение параметра. Старое значение, если оно было - удаляет
+     * @param param параметр
+     * @param val значение параметра
+     * @return Новый объект типа {@code Parameter}
+     */
+    Parameter set(String param, List<String> val);
+
+    /**
+     * Добавляет значение параметру. Если парамтра небыло, он создается.
+     * @param param параметр
+     * @param val значение параметра
+     * @return Новый объект типа {@code Parameter}
+     */
+    Parameter add(String param, String val);
+
+    /**
+     * Добавляет значение параметру. Если парамтра небыло, он создается.
+     * @param param параметр
+     * @param val значение параметра
+     * @return Новый объект типа {@code Parameter}
+     */
+    Parameter add(String param, List<String> val);
+
+    /**
      *
      * @param param название параметра
      * @return {@code true}, если есть такой параметр
@@ -120,6 +160,15 @@ public interface Parameter{
      * @return {@code true}, если значения есть в параметре
      */
     boolean containsVal(String param, String val);
+
+    /**
+     * Проверяет, что значение присутствует в параметре
+     *
+     * @param param название параметра
+     * @param val проверяемое значение
+     * @return {@code true}, если значения есть в параметре
+     */
+    boolean containsVal(String param, int val);
 
     boolean isEmpty();
 }
