@@ -42,6 +42,7 @@ public interface Parameter{
      * @return {@code List<Integer>} со значениями входного параметра.
      *         {@code null}, если значение отсутствует.
      * @throws IllegalFormatException если значение невозможно преобразовать в список чисел
+     * @throws NumberFormatException если значение невозможно преобразовать в список чисел
      */
     List<Integer> getInt(String param);
 
@@ -52,6 +53,7 @@ public interface Parameter{
      * @return {@code List<Integer>} со значениями входного параметра.
      *         {@code def}, если значение отсутствует.
      * @throws IllegalFormatException если значение невозможно преобразовать в список чисел
+     * @throws NumberFormatException если значение невозможно преобразовать в список чисел
      */
     List<Integer> getIntOrDefault(String param, List<Integer> def);
 
@@ -81,10 +83,11 @@ public interface Parameter{
      *
      * @param param название параметра
      * @return значение входного параметра.
-     *         {@code null}, если значение отсутствует.
-     * @throws IllegalFormatException если значение невозможно преобразовать в число
+     * @throws IllegalFormatException, если значение невозможно преобразовать в число
+     * @throws NumberFormatException, если значение невозможно преобразовать в список чисел
+     * @throws NoSuchElementException, если значение отсутствует
      */
-    int getIntF(String param);
+    int getIntF(String param) throws NoSuchFieldException;
 
     /**
      * Ищет первое попавшееся значение входного параметра.
@@ -94,6 +97,7 @@ public interface Parameter{
      * @return значение входного параметра.
      *         {@code def}, если значение отсутствует.
      * @throws IllegalFormatException если значение невозможно преобразовать в число
+     * @throws NumberFormatException если значение невозможно преобразовать в список чисел
      */
     int getIntFOrDefault(String param, int def);
 
@@ -169,6 +173,34 @@ public interface Parameter{
      * @return {@code true}, если значения есть в параметре
      */
     boolean containsVal(String param, int val);
+
+    /**
+     * Удаляет параметр
+     *
+     * @param param название параметра
+     * @return Новый объект типа {@code Parameter}
+     */
+    Parameter remove(String param);
+
+    /**
+     * Удаляет параметр
+     *
+     * @param param название параметра
+     * @param index index значения в параметре
+     * @return Новый объект типа {@code Parameter}
+     *
+     */
+    Parameter remove(String param, int index);
+
+    /**
+     * Удаляет параметр
+     *
+     * @param param название параметра
+     * @param val значение в параметре
+     * @return Новый объект типа {@code Parameter}
+     *
+     */
+    Parameter remove(String param, String val);
 
     boolean isEmpty();
 }

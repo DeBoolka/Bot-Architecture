@@ -88,15 +88,20 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
-    public int getIntF(String param) {
-        return Integer.valueOf(getF(param));
+    public int getIntF(String param) throws NoSuchFieldException {
+        String val = getF(param);
+        if (val == null) {
+            throw new NoSuchFieldException();
+        }
+
+        return Integer.valueOf(val);
     }
 
     @Override
     public int getIntFOrDefault(String param, int def) {
         try {
             return getIntF(param);
-        } catch (Exception e) {
+        } catch (NoSuchFieldException e) {
             return def;
         }
     }
@@ -145,7 +150,7 @@ public class HttpGetParameter implements Parameter {
     @Override
     public boolean containsAllVal(String param, List<String> vals) {
         List<String> lst = get(param);
-        if (lst == null || vals == null || lst.size() != vals.size()) {
+        if (lst == null || vals == null) {
             return false;
         }
 
@@ -170,6 +175,44 @@ public class HttpGetParameter implements Parameter {
     @Override
     public boolean containsVal(String param, int val) {
         return containsVal(param, String.valueOf(val));
+    }
+
+    @Override
+    public Parameter remove(String param) {
+        parameters.remove(param);
+        return this;
+    }
+
+    @Override
+    public Parameter remove(String param, int index) {
+        try {
+            List<String> lst = get(param);
+            if (lst != null && lst.size() <= 1 && index == 0) {
+                parameters.remove(param);
+            } else if (lst != null) {
+                lst.remove(index);
+            }
+        } catch (Exception ignore) {
+        }
+
+        return this;
+    }
+
+    @Override
+    public Parameter remove(String param, String val) {
+        try {
+            List<String> lst = get(param);
+            if (lst != null) {
+                lst.remove(val);
+
+                if (lst.isEmpty()) {
+                    parameters.remove(param);
+                }
+            }
+        } catch (Exception ignore) {
+        }
+
+        return this;
     }
 
     @Override
