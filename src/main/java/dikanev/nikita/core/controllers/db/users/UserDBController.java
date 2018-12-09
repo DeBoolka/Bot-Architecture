@@ -176,13 +176,10 @@ public class UserDBController {
     public boolean deleteToken(int id) throws SQLException {
         //todo: Удадяляет все токены из бд
         String sql = "DELETE FROM tokens " +
-                "WHERE id = ? OR create_time < ?";
+                "WHERE id = ?";
 
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, id);
-        prStatement.setTimestamp(2,
-                Timestamp.valueOf(LocalDateTime.now()
-                                .minusMinutes(DBStorage.getInstance().getTokenDeleteTimeMinutes())));
         int countUpdate = prStatement.executeUpdate();
         prStatement.close();
 

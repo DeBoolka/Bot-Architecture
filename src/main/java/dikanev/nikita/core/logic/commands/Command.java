@@ -6,12 +6,12 @@ import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.users.User;
-import dikanev.nikita.core.controllers.commands.CommandController;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
+import org.checkerframework.checker.nullness.compatqual.NonNullType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Command {
@@ -32,12 +32,8 @@ public abstract class Command {
     }
 
     //Предварительные проверки перед запуском метода
-    public ApiObject run(Map<String, String[]> args) throws NoAccessException{
-        if (args == null) {
-            args = new LinkedHashMap<>();
-        }
-
-        String hash = args.getOrDefault("token", new String[]{""})[0];
+    public ApiObject run(@NonNullType Parameter args) throws NoAccessException{
+        String hash = args.getFOrDefault("token", "");
         if(hash.equals("") && !hasFreeAccess()){
             throw new NoAccessException("Operation id " + getId());
         }
@@ -63,7 +59,7 @@ public abstract class Command {
     }
 
     //Перегружаемый метод с работой команды
-    protected abstract ApiObject work(User user, Map<String, String[]> args);
+    protected abstract ApiObject work(User user, Parameter args);
 
     public Command setFreeAccess(boolean isFreeAccess) {
         this.isFreeAccess = isFreeAccess;
@@ -76,31 +72,5 @@ public abstract class Command {
 
     public int getId(){
         return id;
-    }
-
-    //Возращает одно слово из мапа
-    protected String getString(String parameter, Map<String, String[]> parameters) throws InvalidParametersException {
-        String[] parameterArray = parameters.get(parameter);
-        if (parameterArray == null || parameterArray.length > 1) {
-            throw new InvalidParametersException(parameter);
-        }
-
-        return parameterArray[0];
-    }
-
-    //Возращает одно слово из мапа
-    protected int getInt(String parameter, Map<String, String[]> parameters) throws InvalidParametersException {
-        String parameterString = getString(parameter, parameters);
-
-        try {
-            return Integer.parseInt(parameterString);
-        } catch (NumberFormatException e) {
-            throw new InvalidParametersException(parameter);
-        }
-    }
-
-    //Проверяет наличие параметра
-    protected boolean hasParameter(String parameter, Map<String, String[]> parameters) {
-        return parameters.get(parameter) != null;
     }
 }

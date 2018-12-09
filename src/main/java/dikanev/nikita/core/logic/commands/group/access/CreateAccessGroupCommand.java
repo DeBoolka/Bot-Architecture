@@ -1,16 +1,22 @@
 package dikanev.nikita.core.logic.commands.group.access;
 
+import com.google.common.primitives.Ints;
+import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.exceptions.NotFoundException;
+import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.groups.AccessGroupController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public class CreateAccessGroupCommand extends Command {
@@ -22,46 +28,43 @@ public class CreateAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
-        int idGroup;
-        int idCommand = -1;
-        Integer[] idCommands = null;
-        String[] idCommandsArr = args.get("id_command");
-        String[] nameCommands = args.get("name");
-        boolean access;
-        try {
-            idGroup = getInt("id_group", args);
-            if (hasParameter("id_command", args)) {
-                if (idCommandsArr.length > 1) {
-                    idCommands = new Integer[idCommandsArr.length];
-                    for (int i = 0; i < idCommandsArr.length; i++) {
-                        idCommands[i] = Integer.valueOf(idCommandsArr[i]);
-                    }
-                } else {
-                    idCommand = getInt("id_command", args);
-                }
-            }
-            access = Boolean.valueOf(getString("access", args));
-        } catch (Exception e) {
-            return new ExceptionObject(new InvalidParametersException("Insufficient number of parameters."));
+    protected ApiObject work(User user, Parameter args) {
+        if (!args.contains("id_group")) {
+            return new ExceptionObject(new NotFoundException("Not found group id"));
+        } else if (!args.contains("access")) {
+            return new ExceptionObject(new NotFoundException("Not found access"));
+        } else if (!args.contains("name") && !args.contains("id_command")) {
+            return new ExceptionObject(new NotFoundException("Not found name or id_command"));
         }
 
-        boolean response;
+        int idGroup;
+        boolean access;
         try {
-            if (idCommands != null) {
-                response = AccessGroupController.getInstance().createAccess(idGroup, idCommands, access);
-            } else {
-                if (nameCommands != null) {
-                    response = AccessGroupController.getInstance().createAccess(idGroup, nameCommands, access);
-                } else if (idCommand >= 0) {
-                    response = AccessGroupController.getInstance().createAccess(idGroup, idCommand, access);
-                } else {
-                    throw new InvalidParametersException("Parameter not found");
+            idGroup = args.getIntF("id_group");
+            access = Boolean.valueOf(args.getF("access"));
+        } catch (Exception e) {
+            return new ExceptionObject(new InvalidParametersException("id_group or access is invalid."));
+        }
+
+        List<String> names;
+        List<Integer> idCommands;
+        boolean response;
+        names = args.get("name");
+        try {
+            if (names == null) {
+                try {
+                    idCommands = args.getInt("id_command");
+                } catch (NumberFormatException e) {
+                    return new ExceptionObject(new InvalidParametersException("id_command is invalid."));
                 }
+
+                response = AccessGroupController.getInstance().createAccess(idGroup, Ints.toArray( idCommands), access);
+            } else {
+                response = AccessGroupController.getInstance().createAccess(idGroup, names.toArray(new String[0]), access);
             }
-        } catch (SQLException | InvalidParametersException e) {
-            LOG.debug("Create a group in the database: ", e);
-            return new ExceptionObject(new InvalidParametersException("Create a group in the database."));
+        } catch (SQLException e) {
+            LOG.error("SQL request error: " + e.getSQLState());
+            return new ExceptionObject(new UnidentifiedException("Server error."));
         }
 
         return new MessageObject(response ? "Ok" : "No");

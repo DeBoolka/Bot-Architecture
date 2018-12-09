@@ -27,7 +27,7 @@ public class AccessGroupController {
     }
 
     //Устанавливает доступ к командам для группы
-    public boolean createAccess(int idGroup, Integer[] idCommands, boolean privilege) throws SQLException {
+    public boolean createAccess(int idGroup, int[] idCommands, boolean privilege) throws SQLException {
         return AccessGroupDBController.getInstance().createAccess(idGroup, idCommands, privilege);
     }
 

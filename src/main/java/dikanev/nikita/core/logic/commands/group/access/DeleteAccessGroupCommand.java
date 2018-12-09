@@ -9,6 +9,7 @@ import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.commands.CommandController;
 import dikanev.nikita.core.controllers.groups.AccessGroupController;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.URLParameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -19,19 +20,21 @@ public class DeleteAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Map<String, String[]> args) {
+    protected ApiObject work(User user, Parameter args) {
         int idGroup;
         int idCommand = -1;
         String nameCommand = null;
         try {
-            idGroup = getInt("id_group", args);
-            if (hasParameter("id_command", args)) {
-                idCommand = getInt("id_command", args);
+            idGroup = args.getIntF("id_group");
+            if (args.contains("id_command")) {
+                idCommand = args.getIntF("id_command");
+            } else if (args.contains("name")) {
+                nameCommand = args.getF("name");
             } else {
-                nameCommand = getString("name", args);
+                return new ExceptionObject(new InvalidParametersException("Parameters name or id_command not found"));
             }
         } catch (Exception e) {
-            return new ExceptionObject(new InvalidParametersException("Insufficient number of parameters."));
+            return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }
 
         boolean response;

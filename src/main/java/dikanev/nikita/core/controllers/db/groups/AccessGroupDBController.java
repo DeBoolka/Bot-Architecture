@@ -44,7 +44,7 @@ public class AccessGroupDBController {
     }
 
     //Устанавливает доступ к командам для группы
-    public boolean createAccess(int idGroup, Integer[] idCommands, boolean privilege) throws SQLException {
+    public boolean createAccess(int idGroup, int[] idCommands, boolean privilege) throws SQLException {
         String sql = "INSERT INTO groups_privilege(id_group, id_command, access) " +
                 "VAlUES(?, ?, ?);";
 
@@ -77,7 +77,7 @@ public class AccessGroupDBController {
 
     //Устанавливает доступ к команде для группы
     public boolean createAccess(int idGroup, String[] nameCommands, boolean privilege) throws SQLException {
-        Integer[] idCommands = new Integer[nameCommands.length];
+        int[] idCommands = new int[nameCommands.length];
         try {
             for (int i = 0; i < nameCommands.length; i++) {
                 idCommands[i] = CommandDBController.getInstance().getId(nameCommands[i]);
