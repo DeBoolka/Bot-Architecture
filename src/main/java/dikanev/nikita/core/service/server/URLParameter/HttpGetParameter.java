@@ -46,14 +46,6 @@ public class HttpGetParameter implements Parameter {
         return parameters.get(parameter);
     }
 
-    @Override
-    public List<String> get(String param, Supplier exHandler) {
-        List<String> lst = get(param);
-        if (lst == null) {
-            exHandler.get();
-        }
-        return lst;
-    }
 
     @Override
     public List<String> getOrDefault(String key, List<String> def) {
@@ -68,15 +60,6 @@ public class HttpGetParameter implements Parameter {
             return lst.get(0);
         }
         return null;
-    }
-
-    @Override
-    public String getF(String param, Supplier exHandler) {
-        String lst = getF(param);
-        if (lst == null) {
-            exHandler.get();
-        }
-        return lst;
     }
 
     @Override
@@ -99,15 +82,6 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
-    public List<Integer> getInt(String param, Supplier exHandler) {
-        List<Integer> lst = getInt(param);
-        if (lst == null) {
-            exHandler.get();
-        }
-        return lst;
-    }
-
-    @Override
     public List<Integer> getIntOrDefault(String param, List<Integer> def) {
         List<Integer> lst = getInt(param);
         return lst != null ? lst : def;
@@ -121,18 +95,6 @@ public class HttpGetParameter implements Parameter {
         }
 
         return Integer.valueOf(val);
-    }
-
-    @Override
-    public int getIntF(String param, Supplier exHandler) {
-        int val;
-        try {
-            val = getIntF(param);
-        } catch (NoSuchFieldException e) {
-            val = (Integer) exHandler.get();
-        }
-
-        return val;
     }
 
     @Override
@@ -183,6 +145,11 @@ public class HttpGetParameter implements Parameter {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean containsAll(String[] params) {
+        return containsAll(List.of(params));
     }
 
     @Override

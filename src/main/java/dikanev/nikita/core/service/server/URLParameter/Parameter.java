@@ -31,15 +31,6 @@ public interface Parameter{
     /**
      *
      * @param param название параметра
-     * @param exHandler функция выполняющееся в случае, если значение отсутствует
-     * @return {@code List<String>} со значениями входного параметра.
-     * @throws IllegalFormatException если значение невозможно преобразовать в список строк
-     */
-    List<String> get(String param, Supplier exHandler);
-
-    /**
-     *
-     * @param param название параметра
      * @param def список со значениями по умолчанию
      * @return {@code List<String>} со значениями входного параметра.
      *         {@code def}, если значение отсутствует.
@@ -56,16 +47,6 @@ public interface Parameter{
      * @throws NumberFormatException если значение невозможно преобразовать в список чисел
      */
     List<Integer> getInt(String param);
-
-    /**
-     *
-     * @param param название параметра
-     * @param exHandler функция выполняющееся в случае, если значение отсутствует
-     * @return {@code List<Integer>} со значениями входного параметра.
-     * @throws IllegalFormatException если значение невозможно преобразовать в список чисел
-     * @throws NumberFormatException если значение невозможно преобразовать в список чисел
-     */
-    List<Integer> getInt(String param, Supplier exHandler);
 
     /**
      *
@@ -89,16 +70,6 @@ public interface Parameter{
     String getF(String param);
 
     /**
-     * Ищет первое попавшееся значение входного параметра
-     *
-     * @param param название параметра
-     * @return значение входного параметра.
-     * @param exHandler функция выполняющееся в случае, если значение отсутствует
-     * @throws IllegalFormatException если значение невозможно преобразовать в строку
-     */
-    String getF(String param, Supplier exHandler);
-
-    /**
      * Ищет первое попавшееся значение входного параметра.
      *
      * @param param название параметра
@@ -119,18 +90,6 @@ public interface Parameter{
      * @throws NoSuchElementException, если значение отсутствует
      */
     int getIntF(String param) throws NoSuchFieldException;
-
-    /**
-     * Ищет первое попавшееся значение входного параметра.
-     *
-     * @param param название параметра
-     * @param exHandler функция выполняющееся в случае, если значение отсутствует
-     * @return значение входного параметра.
-     *         Если значение отсутствует, то возвращает значение функции exHandler
-     * @throws IllegalFormatException, если значение невозможно преобразовать в число
-     * @throws NumberFormatException, если значение невозможно преобразовать в список чисел
-     */
-    int getIntF(String param, Supplier exHandler);
 
     /**
      * Ищет первое попавшееся значение входного параметра.
@@ -189,6 +148,13 @@ public interface Parameter{
      * @return {@code true}, если есть параметры
      */
     boolean containsAll(List<String> params);
+
+    /**
+     *
+     * @param params название параметров
+     * @return {@code true}, если есть параметры
+     */
+    boolean containsAll(String[] params);
 
     /**
      * Проверяет, что все значения присутствуют в параметре
