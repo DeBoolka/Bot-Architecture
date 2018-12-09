@@ -3,10 +3,8 @@ package dikanev.nikita.core.service.server.URLParameter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class HttpGetParameter implements Parameter {
 
@@ -43,8 +41,18 @@ public class HttpGetParameter implements Parameter {
         return mapToGetString(parameters);
     }
 
+    @Override
     public List<String> get(String parameter) {
         return parameters.get(parameter);
+    }
+
+    @Override
+    public List<String> get(String param, Supplier exHandler) {
+        List<String> lst = get(param);
+        if (lst == null) {
+            exHandler.get();
+        }
+        return lst;
     }
 
     @Override
@@ -60,6 +68,15 @@ public class HttpGetParameter implements Parameter {
             return lst.get(0);
         }
         return null;
+    }
+
+    @Override
+    public String getF(String param, Supplier exHandler) {
+        String lst = getF(param);
+        if (lst == null) {
+            exHandler.get();
+        }
+        return lst;
     }
 
     @Override
@@ -82,6 +99,15 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
+    public List<Integer> getInt(String param, Supplier exHandler) {
+        List<Integer> lst = getInt(param);
+        if (lst == null) {
+            exHandler.get();
+        }
+        return lst;
+    }
+
+    @Override
     public List<Integer> getIntOrDefault(String param, List<Integer> def) {
         List<Integer> lst = getInt(param);
         return lst != null ? lst : def;
@@ -95,6 +121,18 @@ public class HttpGetParameter implements Parameter {
         }
 
         return Integer.valueOf(val);
+    }
+
+    @Override
+    public int getIntF(String param, Supplier exHandler) {
+        int val;
+        try {
+            val = getIntF(param);
+        } catch (NoSuchFieldException e) {
+            val = (Integer) exHandler.get();
+        }
+
+        return val;
     }
 
     @Override
@@ -246,14 +284,6 @@ public class HttpGetParameter implements Parameter {
             }
         }
 
-        return builder.toString();
-    }
-
-    private static String listToGetString(String key, List<String> params) {
-        StringBuilder builder = new StringBuilder();
-        for (String param : params) {
-            builder.append("&").append(key).append("=").append(param != null ? escape(param) : "");
-        }
         return builder.toString();
     }
 
