@@ -3,7 +3,7 @@
     "id": 1,
     "route": "user/register",
     "name": "Test Command",
-    "class": "dikanev.nikita.core.logic.commands.user.NewUserCommand"
+    "class": "dikanev.nikita.core.logic.commands.user.RegisterUserCommand"
   },
   {
     "id": 2,

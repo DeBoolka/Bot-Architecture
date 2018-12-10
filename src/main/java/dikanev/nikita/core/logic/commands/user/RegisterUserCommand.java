@@ -12,9 +12,9 @@ import dikanev.nikita.core.service.server.URLParameter.Parameter;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class NewUserCommand extends Command {
+public class RegisterUserCommand extends Command {
 
-    public NewUserCommand(int id) {
+    public RegisterUserCommand(int id) {
         super(id);
     }
 
@@ -41,7 +41,7 @@ public class NewUserCommand extends Command {
                 || email.length() > 127
                 || sName.length() > 100
                 || name.length() > 100) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect surname or name param."));
+            return new ExceptionObject(new InvalidParametersException("Incorrect surname, name or email param."));
         } else if(idGroup <= 0) {
             return new ExceptionObject(new InvalidParametersException("Incorrect id group param."));
         }
