@@ -1,18 +1,15 @@
 package dikanev.nikita.core.logic.commands;
 
-import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.NoAccessException;
 import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.users.User;
-import dikanev.nikita.core.service.server.URLParameter.Parameter;
+import dikanev.nikita.core.service.server.parameter.Parameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.checkerframework.checker.nullness.compatqual.NonNullType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public abstract class Command {
 

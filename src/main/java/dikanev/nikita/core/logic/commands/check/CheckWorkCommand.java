@@ -4,9 +4,7 @@ import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.URLParameter.Parameter;
-
-import java.util.Map;
+import dikanev.nikita.core.service.server.parameter.Parameter;
 
 public class CheckWorkCommand extends Command {
     public CheckWorkCommand(int id) {

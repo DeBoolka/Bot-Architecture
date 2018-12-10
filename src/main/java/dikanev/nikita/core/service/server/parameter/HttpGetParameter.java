@@ -1,10 +1,9 @@
-package dikanev.nikita.core.service.server.URLParameter;
+package dikanev.nikita.core.service.server.parameter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class HttpGetParameter implements Parameter {
 
