@@ -3,6 +3,7 @@ package dikanev.nikita.core.service.storage;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import dikanev.nikita.core.controllers.commands.CommandController;
 import dikanev.nikita.core.logic.commands.Command;
 
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +24,8 @@ public class CommandStorage {
     private final Map<String, Command> commands = new HashMap<>();
     private final Map<Integer, String> cacheNameCommand = new HashMap<>();
 
+    private String routeConflict = "IGNORE";
+
     public static CommandStorage getInstance() {
         return instance;
     }
@@ -29,7 +34,7 @@ public class CommandStorage {
     }
 
     //Инициализация команд
-    public void init(String pathToCommandsRoute) {
+    public void init(String pathToCommandsRoute, String routeConflict) {
         getCommands(pathToCommandsRoute).forEach((key, val) ->{
             try {
                 addCommand(val[0], (Command) Class.forName(val[1]).getDeclaredConstructor(int.class).newInstance(key));
@@ -37,6 +42,65 @@ public class CommandStorage {
                 LOG.error(e.getMessage());
             }
         });
+
+        this.routeConflict = routeConflict;
+        conflictRoute();
+
+    }
+
+    private void conflictRoute() {
+        switch (routeConflict) {
+            case "IGNORE":
+                return;
+            case "PULL_AND_PUSH":
+                pullAndPushCommand();
+        }
+    }
+
+    private void pullAndPushCommand() {
+        Map<Integer, String> dbCommand = CommandController.getCommands();
+        if (dbCommand == null || dbCommand.equals(cacheNameCommand)) {
+            return;
+        }
+
+        Map<String, Command> notContainedInDB = new HashMap<>();
+        cacheNameCommand.clear();
+        commands.forEach((k, v) -> {
+            int keyFromDB = getKeyFromMap(k, dbCommand);
+            if (keyFromDB == -1) {
+                notContainedInDB.put(k, v);
+            } else {
+                v.setId(keyFromDB);
+                cacheNameCommand.put(keyFromDB, k);
+            }
+        });
+
+        notContainedInDB.forEach((k, v) -> {
+            int id = 1;
+            try {
+                id = CommandController.getInstance().createCommand(k);
+            } catch (Exception e) {
+                LOG.warn("Failed to write command " + k + " to database.\nError: " + e.getMessage());
+                if (!cacheNameCommand.isEmpty()) {
+                    id = cacheNameCommand.entrySet().stream()
+                            .max(Comparator.comparing(Map.Entry::getKey))
+                            .get().getKey() + 1;
+                }
+            }
+
+            v.setId(id);
+            cacheNameCommand.put(id, k);
+        });
+    }
+
+    private int getKeyFromMap(String val, Map<Integer, String> map) {
+        for (Map.Entry<Integer, String> temp : map.entrySet()) {
+            if (temp.getValue().equals(val)) {
+                return temp.getKey();
+            }
+        }
+
+        return -1;
     }
 
     private Map<Integer, String[]> getCommands(String pathToCommandsRoute) {

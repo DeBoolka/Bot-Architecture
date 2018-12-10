@@ -174,7 +174,6 @@ public class UserDBController {
 
     //Удалить токен
     public boolean deleteToken(int id) throws SQLException {
-        //todo: Удадяляет все токены из бд
         String sql = "DELETE FROM tokens " +
                 "WHERE id = ?";
 
