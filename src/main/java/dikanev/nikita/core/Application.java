@@ -47,7 +47,8 @@ public class Application {
         String passwordDB = properties.getProperty("db.password");
         DBStorage.getInstance().init(urlDB, loginDB, passwordDB);
 
-        CommandStorage.getInstance().init(Application.class.getResource("/commands_route.json").getPath());
+        String routeConflict = properties.getProperty("db.route.conflict", "IGNORE");
+        CommandStorage.getInstance().init(Application.class.getResource("/commands_route.json").getPath(), routeConflict);
 
         int portServer = Integer.parseInt(properties.getProperty("server.port", "9090"));
         ServerStorage.getInstance().start(portServer);
