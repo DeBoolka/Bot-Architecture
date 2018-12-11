@@ -6,7 +6,7 @@ import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.URLParameter.HttpGetParameter;
+import dikanev.nikita.core.service.server.parameter.HttpGetParameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

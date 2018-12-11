@@ -6,7 +6,7 @@ import dikanev.nikita.core.api.objects.*;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.groups.AccessGroupController;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.URLParameter.Parameter;
+import dikanev.nikita.core.service.server.parameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,6 @@
 package dikanev.nikita.core.logic.commands.group.access;
 
 import com.google.common.primitives.Ints;
-import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.exceptions.UnidentifiedException;
@@ -11,13 +10,12 @@ import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.groups.AccessGroupController;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.URLParameter.Parameter;
+import dikanev.nikita.core.service.server.parameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public class CreateAccessGroupCommand extends Command {
 

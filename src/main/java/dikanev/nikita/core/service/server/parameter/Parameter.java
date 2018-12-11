@@ -1,8 +1,6 @@
-package dikanev.nikita.core.service.server.URLParameter;
+package dikanev.nikita.core.service.server.parameter;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public interface Parameter{
 
