@@ -57,7 +57,7 @@ public class DBStorage {
             LOG.info("Connect DB");
         } catch (SQLException e) {
             connection = null;
-            LOG.error("Can't connect to the DB");
+            LOG.error("Can't connect to the DB. ", e);
             throw new IllegalStateException(e);
         }
     }

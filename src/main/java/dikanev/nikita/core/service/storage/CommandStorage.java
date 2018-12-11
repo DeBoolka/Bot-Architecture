@@ -39,7 +39,7 @@ public class CommandStorage {
             try {
                 addCommand(val[0], (Command) Class.forName(val[1]).getDeclaredConstructor(int.class).newInstance(key));
             } catch (Exception e) {
-                LOG.error(e.getMessage());
+                LOG.error("Init command error: ", e);
             }
         });
 
@@ -80,7 +80,7 @@ public class CommandStorage {
             try {
                 id = CommandController.getInstance().createCommand(k);
             } catch (Exception e) {
-                LOG.warn("Failed to write command " + k + " to database.\nError: " + e.getMessage());
+                LOG.warn("Failed to write command " + k + " to database. Error: ", e);
                 if (!cacheNameCommand.isEmpty()) {
                     id = cacheNameCommand.entrySet().stream()
                             .max(Comparator.comparing(Map.Entry::getKey))
@@ -119,7 +119,7 @@ public class CommandStorage {
                                      , jo.get("name").getAsString()});
             });
         } catch (IOException e) {
-            LOG.error("Commands route file not found.");
+            LOG.error("Commands route file not found. ", e);
             return new HashMap<>();
         }
 

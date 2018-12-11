@@ -47,12 +47,7 @@ public abstract class Command {
 
         }
 
-        try {
-            return work(user, args);
-        } catch (Exception e) {
-            LOG.warn("Unknown error in the command: ", e);
-            return new ExceptionObject(new UnidentifiedException(e.getMessage()));
-        }
+        return work(user, args);
     }
 
     //Перегружаемый метод с работой команды

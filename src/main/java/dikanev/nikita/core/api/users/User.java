@@ -62,7 +62,7 @@ public class User {
             sName = (String) resMap.get("s_name");
             name = (String) resMap.get("name");
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.warn("Error in loadFromDB: ", e);
         }
     }
 
@@ -84,7 +84,7 @@ public class User {
             sName = (String) resMap.get("s_name");
             name = (String) resMap.get("name");
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.warn("Error in loadFromDB: ", e);
         }
     }
 

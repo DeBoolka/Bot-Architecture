@@ -37,7 +37,7 @@ public class Group {
         try {
             this.name = GroupController.getInstance().getName(this.id);
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.error("Error in loadFromDB: ", e);
             this.name = "";
         }
     }
@@ -47,7 +47,7 @@ public class Group {
         try {
             return AccessGroupController.getInstance().hasAccessGroup(idGroup, idCommand);
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.warn("Error in hasRight: ", e);
         }
 
         return false;

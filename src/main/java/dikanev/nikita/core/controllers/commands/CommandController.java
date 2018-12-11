@@ -40,7 +40,7 @@ public class CommandController {
         try {
             return CommandDBController.getInstance().getName(idCommand);
         } catch (SQLException e) {
-            LOG.error(e.getMessage());
+            LOG.error("SQL exception in getName: ", e);
             return "";
         }
     }
@@ -59,7 +59,7 @@ public class CommandController {
         try {
             return CommandDBController.getInstance().getCommands();
         } catch (SQLException e) {
-            LOG.warn(e.getMessage());
+            LOG.warn("Error in getCommands: ", e);
 
             final Map<Integer, String> res = new HashMap<>();
             CommandStorage.getInstance().getCommands().forEach((k, v) -> res.put(v.getId(), k));
