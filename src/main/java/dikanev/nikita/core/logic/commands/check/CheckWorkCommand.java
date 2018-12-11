@@ -12,6 +12,11 @@ public class CheckWorkCommand extends Command {
     }
 
     @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return null;
+    }
+
+    @Override
     protected ApiObject work(User user, Parameter args) {
         return new MessageObject("Ok");
     }

@@ -17,4 +17,16 @@ public class ExceptionObject extends ApiObject {
         this.message = ex.getMessage();
         this.description = ex.getDescription();
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
 }

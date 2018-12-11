@@ -17,6 +17,11 @@ public class CreateGroupCommand extends Command {
     }
 
     @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return null;
+    }
+
+    @Override
     protected ApiObject work(User user, Parameter args) {
         String name = null;
         boolean isIdParameter = args.contains("id");

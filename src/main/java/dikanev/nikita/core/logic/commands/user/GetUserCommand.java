@@ -19,6 +19,11 @@ public class GetUserCommand extends Command {
     }
 
     @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return null;
+    }
+
+    @Override
     protected ApiObject work(User user, Parameter args) {
         int id;
         try {

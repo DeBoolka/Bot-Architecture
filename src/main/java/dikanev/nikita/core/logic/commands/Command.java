@@ -1,15 +1,20 @@
 package dikanev.nikita.core.logic.commands;
 
+import dikanev.nikita.core.api.exceptions.ApiException;
+import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.NoAccessException;
-import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.users.User;
+import dikanev.nikita.core.controllers.commands.CommandController;
 import dikanev.nikita.core.service.server.parameter.Parameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.checkerframework.checker.nullness.compatqual.NonNullType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 public abstract class Command {
 
@@ -32,7 +37,8 @@ public abstract class Command {
     public ApiObject run(@NonNullType Parameter args) throws NoAccessException{
         String hash = args.getFOrDefault("token", "");
         if(hash.equals("") && !hasFreeAccess()){
-            throw new NoAccessException("Operation id " + getId());
+            throw new NoAccessException("Operation id " + getId()
+                    + ", name " + CommandController.getInstance().getName(getId()));
         }
 
         User user;
@@ -41,17 +47,55 @@ public abstract class Command {
         } else {
             user = new User(hash);
             if (!user.hasRightByGroup(getId())) {
-                throw new NoAccessException("Operation id " + getId() + ", name - "
-                        + CommandStorage.getInstance().getNameCommand(getId()));
+                throw new NoAccessException("Operation id " + getId()
+                        + ", name " + CommandController.getInstance().getName(getId()));
             }
 
         }
 
-        return work(user, args);
+        try {
+            checkingParameters(args);
+            return work(user, args);
+        } catch (IllegalStateException e) {
+            return new ExceptionObject(new ApiException(400, e.getMessage()));
+        }  catch (InvalidParametersException e) {
+            return new ExceptionObject(new InvalidParametersException(e.getMessage()));
+        }
+    }
+
+    private void checkingParameters(Parameter parameter) throws InvalidParametersException {
+        PreparedParameter preparation = setupParameters(parameter);
+        if (preparation == null
+                || preparation.validInputParameters == null
+                || preparation.validInputParameters.length == 0) {
+            return;
+        }
+
+        for (String[] params : preparation.validInputParameters) {
+            if (parameter.containsAll(params)) {
+                for (String param: params) {
+                    ParameterHandler pp = preparation.consumerParameters.get(param);
+                    if (pp == null) {
+                        continue;
+                    }
+
+                    String err = pp.processing(parameter, parameter.get(param));
+                    if (err != null) {
+                        throw new InvalidParametersException(err);
+                    }
+                }
+                return;
+            }
+        }
+
+        throw new InvalidParametersException("The required parameters were not found.");
     }
 
     //Перегружаемый метод с работой команды
     protected abstract ApiObject work(User user, Parameter args);
+
+    //Перегружаемый метод с обработкой аргументов
+    protected abstract PreparedParameter setupParameters(Parameter params);
 
     public Command setFreeAccess(boolean isFreeAccess) {
         this.isFreeAccess = isFreeAccess;
@@ -67,4 +111,23 @@ public abstract class Command {
     }
 
     public void setId(int id){ this.id = id;}
+
+    protected class PreparedParameter {
+        String[][] validInputParameters;
+
+        Map<String, ParameterHandler> consumerParameters;
+
+        public PreparedParameter(String[][] validInputParameters) {
+            this.validInputParameters = validInputParameters;
+        }
+
+        public PreparedParameter(String[][] validInputParameters, Map<String, ParameterHandler> consumerParameters) {
+            this.validInputParameters = validInputParameters;
+            this.consumerParameters = consumerParameters;
+        }
+    }
+
+    public interface ParameterHandler{
+        String processing(Parameter parameter, List<String> val);
+    }
 }

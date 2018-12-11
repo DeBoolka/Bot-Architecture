@@ -41,12 +41,15 @@ public class CallbackRequestHandler extends HttpServlet {
             try {
                 Command responseCommand = CommandStorage.getInstance().getCommand(commandName);
                 if (responseCommand == null) {
-                    responseObject = new ExceptionObject(new NotFoundException("Command not found"));
+                    responseObject = new ExceptionObject(new NotFoundException("Command not found."));
                 } else {
                     responseObject = responseCommand.run(new HttpGetParameter(req.getParameterMap()));
                 }
 
                 pr.write(responseObject.getJson());
+                if (responseObject.getType().equals("error")) {
+                    resp.setStatus(((ExceptionObject) responseObject).getCode());
+                }
             } catch (NoAccessException e) {
                 pr.write(new ExceptionObject(e).getJson());
                 resp.setStatus(403);
