@@ -35,7 +35,7 @@ public class ServerStorage {
 
             LOG.info("Start Server");
         } catch (Exception e) {
-            LOG.error("The server could not be started.");
+            LOG.error("The server could not be started. Error: ", e);
             throw new Exception("The server could not be started. PORT = " + port + "\nMessage: " + e.getMessage());
         }
     }

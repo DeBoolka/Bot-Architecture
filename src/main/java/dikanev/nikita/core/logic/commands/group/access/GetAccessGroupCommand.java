@@ -23,6 +23,11 @@ public class GetAccessGroupCommand extends Command {
     }
 
     @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return null;
+    }
+
+    @Override
     protected ApiObject work(User user, Parameter args) {
         int idGroup;
         List<String> commands;

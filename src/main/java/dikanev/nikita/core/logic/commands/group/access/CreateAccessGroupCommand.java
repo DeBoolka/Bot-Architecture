@@ -26,6 +26,11 @@ public class CreateAccessGroupCommand extends Command {
     }
 
     @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return null;
+    }
+
+    @Override
     protected ApiObject work(User user, Parameter args) {
         if (!args.contains("id_group")) {
             return new ExceptionObject(new NotFoundException("Not found group id"));
@@ -61,7 +66,7 @@ public class CreateAccessGroupCommand extends Command {
                 response = AccessGroupController.getInstance().createAccess(idGroup, names.toArray(new String[0]), access);
             }
         } catch (SQLException e) {
-            LOG.error("SQL request error: " + e.getSQLState());
+            LOG.error("SQL request error: ", e);
             return new ExceptionObject(new UnidentifiedException("Server error."));
         }
 

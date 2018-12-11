@@ -10,11 +10,27 @@ import dikanev.nikita.core.logic.commands.Command;
 import dikanev.nikita.core.service.server.parameter.Parameter;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterUserCommand extends Command {
 
     public RegisterUserCommand(int id) {
         super(id);
+    }
+
+    @Override
+    protected PreparedParameter setupParameters(Parameter params) {
+        return new PreparedParameter(new String[][]{
+                new String[]{"id_group", "s_name", "name", "email", "password"},
+                new String[]{"id_group", "s_name", "name", "email"}
+        },
+                Map.of(
+                        "s_name", (it, val) -> val.get(0).isEmpty() || val.get(0).length() > 100 ? "Incorrect s_name parameter." : null,
+                        "name", (it, val) -> val.get(0).isEmpty() || val.get(0).length() > 100 ? "Incorrect name parameter." : null,
+                        "email", (it, val) -> val.get(0).isEmpty() || val.get(0).length() > 127 ? "Incorrect email parameter." : null
+                )
+        );
     }
 
     @Override
