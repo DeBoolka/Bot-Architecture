@@ -49,9 +49,11 @@ public class CallbackRequestHandler extends HttpServlet {
                 pr.write(responseObject.getJson());
             } catch (NoAccessException e) {
                 pr.write(new ExceptionObject(e).getJson());
+                resp.setStatus(403);
             } catch (Exception e) {
                 LOG.error(e.getMessage());
                 pr.write(new ExceptionObject(new ApiException(500, "Server error.")).getJson());
+                resp.setStatus(500);
             }
         } catch (IOException ex) {
             LOG.warn("The client could not be contacted.");
