@@ -210,4 +210,18 @@ public interface Parameter{
     Parameter remove(String param, String val);
 
     boolean isEmpty();
+
+    /**
+     *
+     * @param param название параметра
+     * @return {@code true}, если параметры являются целыми числами
+     */
+    boolean isInt(String param);
+
+    /**
+     *
+     * @param param название параметра
+     * @return {@code true}, если первый параметр является целым числом
+     */
+    boolean isIntF(String param);
 }

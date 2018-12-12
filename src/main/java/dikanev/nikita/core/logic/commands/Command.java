@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.compatqual.NonNullType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public abstract class Command {
     }
 
     //Предварительные проверки перед запуском метода
-    public ApiObject run(@NonNullType Parameter args) throws NoAccessException{
+    public ApiObject run(@NonNullType Parameter args) throws Exception{
         String hash = args.getFOrDefault("token", "");
         if(hash.equals("") && !hasFreeAccess()){
             throw new NoAccessException("Operation id " + getId()
@@ -58,7 +59,7 @@ public abstract class Command {
             return work(user, args);
         } catch (IllegalStateException e) {
             return new ExceptionObject(new ApiException(400, e.getMessage()));
-        }  catch (InvalidParametersException e) {
+        }  catch (InvalidParametersException | NoSuchFieldException e) {
             return new ExceptionObject(new InvalidParametersException(e.getMessage()));
         }
     }
@@ -92,7 +93,7 @@ public abstract class Command {
     }
 
     //Перегружаемый метод с работой команды
-    protected abstract ApiObject work(User user, Parameter args);
+    protected abstract ApiObject work(User user, Parameter args) throws NoSuchFieldException, SQLException;
 
     //Перегружаемый метод с обработкой аргументов
     protected abstract PreparedParameter setupParameters(Parameter params);

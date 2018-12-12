@@ -60,9 +60,15 @@
     "class": "dikanev.nikita.core.logic.commands.check.CheckWorkCommand"
   },
   {
-  "id": 11,
-  "route": "group/access/get",
-  "name": "Test Command",
-  "class": "dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand"
-}
+    "id": 11,
+    "route": "group/access/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand"
+  },
+  {
+    "id": 12,
+    "route": "user/info/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.info.GetUserInfoCommand"
+  }
 ]
