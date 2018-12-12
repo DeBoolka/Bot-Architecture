@@ -1,5 +1,6 @@
 package dikanev.nikita.core.controllers.users;
 
+import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.controllers.db.users.UserDBController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,18 @@ public class UserController {
 
     public static UserController getInstance() {
         return ourInstance;
+    }
+
+    public static UserInfo getInfo(int userId) throws SQLException {
+        return UserDBController.getInfo(userId, null, null);
+    }
+
+    public static UserInfo getInfoByLogin(String login) throws SQLException {
+        return UserDBController.getInfo(-1, login, null);
+    }
+
+    public static UserInfo getInfoByEmail(String email) throws SQLException {
+        return UserDBController.getInfo(-1, null, email);
     }
 
     //Создание человека

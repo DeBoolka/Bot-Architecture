@@ -224,6 +224,44 @@ public class HttpGetParameter implements Parameter {
         return parameters.isEmpty();
     }
 
+    @Override
+    public boolean isInt(String paramIn) {
+        List<String> paramList = parameters.get(paramIn);
+        if (paramList == null || paramList.isEmpty()) {
+            return false;
+        }
+
+        for (String param : paramList) {
+            if (param.isEmpty()) {
+                return false;
+            }
+
+            for (char ch : param.toCharArray()) {
+                if (ch < '0' || ch > '9') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isIntF(String paramIn) {
+        String param = getF(paramIn);
+        if (param == null || param.isEmpty()) {
+            return false;
+        }
+
+        for (char ch : param.toCharArray()) {
+            if (ch < '0' || ch > '9') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static Map<String, List<String>> getMapFromHttpGet(String query) throws UnsupportedEncodingException {
         final Map<String, List<String>> query_pairs = new HashMap<>();
         final String[] pairs = query.split("&");

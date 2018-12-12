@@ -1,6 +1,7 @@
 package dikanev.nikita.core.controllers.db.users;
 
 import com.google.common.hash.Hashing;
+import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.controllers.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
@@ -22,6 +23,47 @@ public class UserDBController {
 
     public static UserDBController getInstance() {
         return ourInstance;
+    }
+
+    public static UserInfo getInfo(int userId, String login, String email) throws SQLException {
+        String sql = "SELECT id_user, login, email, age, phone, city, game_name " +
+                "FROM user_info " +
+                "WHERE 0 " + (userId > 0 ? " OR id_user = ? " : "")
+                + (login != null ? " OR login = ? " : "")
+                + (email != null ? " OR email = ? " : "");
+
+
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        int indexWhere = 1;
+        if (userId > 0) {
+            prStatement.setInt(indexWhere, userId);
+            indexWhere++;
+        }
+        if (login != null) {
+            prStatement.setString(indexWhere, login);
+            indexWhere++;
+        }
+        if (email != null) {
+            prStatement.setString(indexWhere, email);
+        }
+
+        ResultSet res = prStatement.executeQuery();
+
+        UserInfo userInfo = null;
+        while (res.next()) {
+            userInfo = new UserInfo()
+                    .setUserId(res.getInt("id_user"))
+                    .setLogin(res.getString("login"))
+                    .setEmail(res.getString("email"))
+                    .setAge(res.getDate("age"))
+                    .setPhone(res.getString("phone"))
+                    .setCity(res.getString("city"))
+                    .setNameOnGame(res.getString("game_name"));
+        }
+
+        res.close();
+        return userInfo;
+
     }
 
     //Создание человека
