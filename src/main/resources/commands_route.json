@@ -88,5 +88,11 @@
     "route": "user/invite/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.invite.GetInvitesIntoSystemCommand"
+  },
+  {
+    "id": 16,
+    "route": "user/invite/apply",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.ApplyInviteIntoSystem"
   }
 ]

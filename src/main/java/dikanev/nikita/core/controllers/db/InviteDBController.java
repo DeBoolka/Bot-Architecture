@@ -58,4 +58,22 @@ public class InviteDBController {
         res.close();
         return invites;
     }
+
+    public static int applyInviteIntoSystem(int userId, String invite) throws SQLException {
+        String sql = "SELECT APPLY_INVITE_INTO_SYSTEM(?, ?) AS groupId";
+
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        prStatement.setString(1, invite);
+        prStatement.setInt(2, userId);
+
+        ResultSet res = prStatement.executeQuery();
+
+        int groupId = -1;
+        while (res.next()) {
+            groupId = res.getInt("groupId");
+        }
+
+        res.close();
+        return groupId;
+    }
 }

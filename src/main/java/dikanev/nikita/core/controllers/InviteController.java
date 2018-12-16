@@ -15,4 +15,8 @@ public class InviteController {
         return InviteDBController.getInvitesIntoSystemOfUser(userId);
     }
 
+    public static int applyInviteIntoSystem(int userId, String invite) throws SQLException {
+        return InviteDBController.applyInviteIntoSystem(userId, invite);
+    }
+
 }
