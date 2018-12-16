@@ -1,6 +1,5 @@
-package dikanev.nikita.core.logic.commands.user.create;
+package dikanev.nikita.core.logic.commands.user.invite;
 
-import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.exceptions.UnidentifiedException;
 import dikanev.nikita.core.api.objects.ApiObject;
@@ -10,7 +9,6 @@ import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.InviteController;
 import dikanev.nikita.core.logic.commands.Command;
 import dikanev.nikita.core.service.server.parameter.Parameter;
-import org.apache.logging.log4j.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,5 +42,6 @@ public class CreateInvitesIntoSystemCommand extends Command {
         return new PreparedParameter(new String[]{"userId", "groupId"}, Map.of(
                 "userId", ((parameter, val) -> parameter.isIntF("userId") ? null : "Incorrect userId parameter."),
                 "groupId", ((parameter, val) -> parameter.isIntF("groupId") ? null : "Incorrect groupId parameter.")
-        ));    }
+        ));
+    }
 }

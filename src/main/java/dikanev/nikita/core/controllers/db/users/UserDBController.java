@@ -103,8 +103,10 @@ public class UserDBController {
             indexStatement++;
         }
 
-        return prStatement.executeUpdate() != 0;
+        int res = prStatement.executeUpdate();
+        prStatement.close();
 
+        return res != 0;
     }
 
     //Создание человека
@@ -123,6 +125,7 @@ public class UserDBController {
         while (res.next()) {
             userId = res.getInt(1);
         }
+        res.close();
 
         return userId;
     }
