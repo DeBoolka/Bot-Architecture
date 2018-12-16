@@ -1,7 +1,7 @@
-package dikanev.nikita.core.controllers.db.commands;
+package dikanev.nikita.core.logic.connector.db.commands;
 
 import dikanev.nikita.core.api.exceptions.NotFoundException;
-import dikanev.nikita.core.controllers.db.SQLHelper;
+import dikanev.nikita.core.logic.connector.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandDBController {
+public class CommandDBConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommandDBController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CommandDBConnector.class);
 
-    private static CommandDBController ourInstance = new CommandDBController();
+    private static CommandDBConnector ourInstance = new CommandDBConnector();
 
-    public static CommandDBController getInstance() {
+    public static CommandDBConnector getInstance() {
         return ourInstance;
     }
 

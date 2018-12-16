@@ -4,7 +4,7 @@ import dikanev.nikita.core.api.exceptions.NotFoundException;
 
 import static org.mockito.Mockito.*;
 
-import dikanev.nikita.core.controllers.db.groups.AccessGroupDBController;
+import dikanev.nikita.core.logic.connector.db.groups.AccessGroupDBConnector;
 import org.mockito.Mock;
 
 import java.lang.reflect.Field;
@@ -16,7 +16,7 @@ public class AccessGroupDBMock {
     private static AccessGroupDBMock ourInstance;
 
     @Mock
-    public AccessGroupDBController accessGroupDB = mock(AccessGroupDBController.class);
+    public AccessGroupDBConnector accessGroupDB = mock(AccessGroupDBConnector.class);
 
     public static AccessGroupDBMock getInstance() {
         if (ourInstance == null) {
@@ -68,10 +68,10 @@ public class AccessGroupDBMock {
     }
 
     private void setOurInstanceToBaseClass() throws NoSuchFieldException, IllegalAccessException {
-        Class clazz = AccessGroupDBController.class;
+        Class clazz = AccessGroupDBConnector.class;
 
         Field field = clazz.getDeclaredField("ourInstance");
         field.setAccessible(true);
-        field.set(AccessGroupDBController.getInstance(), accessGroupDB);
+        field.set(AccessGroupDBConnector.getInstance(), accessGroupDB);
     }
 }

@@ -1,4 +1,4 @@
-package dikanev.nikita.core.controllers.db;
+package dikanev.nikita.core.logic.connector.db;
 
 import dikanev.nikita.core.service.storage.DBStorage;
 

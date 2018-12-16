@@ -1,10 +1,8 @@
 package dikanev.nikita.core.mockers.db;
 
 import dikanev.nikita.core.api.exceptions.NotFoundException;
-import dikanev.nikita.core.controllers.db.groups.AccessGroupDBController;
-import dikanev.nikita.core.controllers.db.users.UserDBController;
+import dikanev.nikita.core.logic.connector.db.users.UserDBConnector;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -17,7 +15,7 @@ public class UserDBMock {
     private static UserDBMock ourInstance;
 
     @InjectMocks
-    public UserDBController userDBMock = mock(UserDBController.class);
+    public UserDBConnector userDBMock = mock(UserDBConnector.class);
 
     public static UserDBMock getInstance() {
         if (ourInstance == null) {
@@ -60,10 +58,10 @@ public class UserDBMock {
     }
 
     private void setOurInstanceToBaseClass() throws NoSuchFieldException, IllegalAccessException {
-        Class clazz = UserDBController.class;
+        Class clazz = UserDBConnector.class;
 
         Field field = clazz.getDeclaredField("ourInstance");
         field.setAccessible(true);
-        field.set(UserDBController.getInstance(), userDBMock);
+        field.set(UserDBConnector.getInstance(), userDBMock);
     }
 }

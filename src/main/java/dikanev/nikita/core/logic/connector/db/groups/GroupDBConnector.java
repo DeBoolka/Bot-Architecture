@@ -1,6 +1,6 @@
-package dikanev.nikita.core.controllers.db.groups;
+package dikanev.nikita.core.logic.connector.db.groups;
 
-import dikanev.nikita.core.controllers.db.SQLHelper;
+import dikanev.nikita.core.logic.connector.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-public class GroupDBController {
+public class GroupDBConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GroupDBController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GroupDBConnector.class);
 
-    private static GroupDBController ourInstance = new GroupDBController();
+    private static GroupDBConnector ourInstance = new GroupDBConnector();
 
-    public static GroupDBController getInstance() {
+    public static GroupDBConnector getInstance() {
         return ourInstance;
     }
 
