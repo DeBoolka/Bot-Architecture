@@ -18,8 +18,6 @@ public class AccessGroupDBController {
 
     private static AccessGroupDBController ourInstance = new AccessGroupDBController();
 
-    private PreparedStatement prStatement;
-
     public static AccessGroupDBController getInstance() {
         return ourInstance;
     }
@@ -32,7 +30,7 @@ public class AccessGroupDBController {
                 "   access = ?";
 
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setInt(2, idCommand);
         prStatement.setBoolean(3, privilege);
@@ -48,7 +46,7 @@ public class AccessGroupDBController {
         String sql = "INSERT INTO groups_privilege(id_group, id_command, access) " +
                 "VAlUES(?, ?, ?);";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setBoolean(3, privilege);
 
@@ -116,7 +114,7 @@ public class AccessGroupDBController {
     public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
         String sql = "SELECT HAS_ACCESS(?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setString(2, commandName);
         ResultSet res = prStatement.executeQuery();
@@ -141,7 +139,7 @@ public class AccessGroupDBController {
                 "   LEFT JOIN commands ON id_command = commands.id " +
                 "WHERE id_group = ?";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         ResultSet res = prStatement.executeQuery();
 
@@ -176,7 +174,7 @@ public class AccessGroupDBController {
                 "WHERE id_group = ? AND id_command = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setBoolean(1, privilege);
         prStatement.setInt(2, idGroup);
         prStatement.setInt(3, idCommand);
@@ -192,7 +190,7 @@ public class AccessGroupDBController {
                 "WHERE id_group = ? AND id_command = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setInt(2, idCommand);
         int res = prStatement.executeUpdate();

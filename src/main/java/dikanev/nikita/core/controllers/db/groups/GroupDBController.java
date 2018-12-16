@@ -16,8 +16,6 @@ public class GroupDBController {
 
     private static GroupDBController ourInstance = new GroupDBController();
 
-    private PreparedStatement prStatement;
-
     public static GroupDBController getInstance() {
         return ourInstance;
     }
@@ -26,7 +24,7 @@ public class GroupDBController {
     public int createGroup(String name) throws SQLException {
         String sql = "INSERT groups(id, name) VALUES (NULL, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, name);
         int res = prStatement.executeUpdate();
         prStatement.close();
@@ -43,7 +41,7 @@ public class GroupDBController {
     public int createGroup(String name, int id) throws SQLException {
         String sql = "INSERT groups(id, name) VALUES (?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, id);
         prStatement.setString(2, name);
         int res = prStatement.executeUpdate();
@@ -63,7 +61,7 @@ public class GroupDBController {
                 "WHERE id = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         int countDelete = prStatement.executeUpdate();
         prStatement.close();
@@ -99,7 +97,7 @@ public class GroupDBController {
                 "WHERE id = ? " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         ResultSet res = prStatement.executeQuery();
 

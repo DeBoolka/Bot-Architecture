@@ -22,14 +22,14 @@ public class CreateGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         String name = null;
-        boolean isIdParameter = args.contains("id");
+        boolean isIdParameter = params.contains("id");
         int id = -1;
         try {
-            name = args.getF("name");
+            name = params.getF("name");
             if (isIdParameter) {
-                id = args.getIntF("id");
+                id = params.getIntF("id");
             }
         } catch (NoSuchFieldException e) {
             return new ExceptionObject(new InvalidParametersException("Incorrect id param."));

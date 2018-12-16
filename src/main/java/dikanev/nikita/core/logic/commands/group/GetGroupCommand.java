@@ -23,10 +23,10 @@ public class GetGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         int idGroup;
         try {
-            idGroup = args.getIntF("id");
+            idGroup = params.getIntF("id");
         } catch (Exception e) {
             return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }

@@ -34,18 +34,18 @@ public class RegisterUserCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         int idGroup;
         String sName;
         String name;
         String email;
         String password;
         try {
-            idGroup = args.getIntF("id_group");
-            sName = args.getFOrDefault("s_name", "");
-            name = args.getFOrDefault("name", "");
-            email = args.getFOrDefault("email", "");
-            password = args.getF("password");
+            idGroup = params.getIntF("id_group");
+            sName = params.getFOrDefault("s_name", "");
+            name = params.getFOrDefault("name", "");
+            email = params.getFOrDefault("email", "");
+            password = params.getF("password");
         } catch (Exception e) {
             return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }

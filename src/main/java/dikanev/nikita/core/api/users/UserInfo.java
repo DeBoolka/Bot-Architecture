@@ -1,6 +1,7 @@
 package dikanev.nikita.core.api.users;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class UserInfo {
     private int userId;
@@ -30,6 +31,16 @@ public class UserInfo {
     }
 
     public UserInfo() {
+    }
+
+    public UserInfo(int userId, String login, String email, Date age, String phone, String city, String nameOnGame) {
+        this.userId = userId;
+        this.login = login;
+        this.email = email;
+        this.age = age;
+        this.phone = phone;
+        this.city = city;
+        this.nameOnGame = nameOnGame;
     }
 
     public int getUserId() {

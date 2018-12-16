@@ -24,16 +24,16 @@ public class DeleteAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         int idGroup;
         int idCommand = -1;
         String nameCommand = null;
         try {
-            idGroup = args.getIntF("id_group");
-            if (args.contains("id_command")) {
-                idCommand = args.getIntF("id_command");
-            } else if (args.contains("name")) {
-                nameCommand = args.getF("name");
+            idGroup = params.getIntF("id_group");
+            if (params.contains("id_command")) {
+                idCommand = params.getIntF("id_command");
+            } else if (params.contains("name")) {
+                nameCommand = params.getF("name");
             } else {
                 return new ExceptionObject(new InvalidParametersException("Parameters name or id_command not found"));
             }
