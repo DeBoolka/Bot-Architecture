@@ -1,25 +1,24 @@
-package dikanev.nikita.core.controllers.db.users;
+package dikanev.nikita.core.logic.connector.db.users;
 
 import com.google.common.hash.Hashing;
 import dikanev.nikita.core.api.users.UserInfo;
-import dikanev.nikita.core.controllers.db.SQLHelper;
+import dikanev.nikita.core.logic.connector.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class UserDBController {
+public class UserDBConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserDBController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserDBConnector.class);
 
-    private static UserDBController ourInstance = new UserDBController();
+    private static UserDBConnector ourInstance = new UserDBConnector();
 
-    public static UserDBController getInstance() {
+    public static UserDBConnector getInstance() {
         return ourInstance;
     }
 
@@ -187,7 +186,7 @@ public class UserDBController {
             return false;
         }
 
-        UserDBController.getInstance().deleteToken(idUser);
+        UserDBConnector.getInstance().deleteToken(idUser);
 
         return true;
     }

@@ -3,7 +3,7 @@ package dikanev.nikita.core.mockers.db;
 import dikanev.nikita.core.api.exceptions.NotFoundException;
 import static org.mockito.Mockito.*;
 
-import dikanev.nikita.core.controllers.db.commands.CommandDBController;
+import dikanev.nikita.core.logic.connector.db.commands.CommandDBConnector;
 import org.mockito.Mock;
 
 import java.lang.reflect.Field;
@@ -15,7 +15,7 @@ public class CommandDBMock {
     private static CommandDBMock ourInstance;
 
     @Mock
-    public CommandDBController commandDBController = mock(CommandDBController.class);
+    public CommandDBConnector commandDBConnector = mock(CommandDBConnector.class);
 
     public static CommandDBMock getInstance() {
         if (ourInstance == null) {
@@ -34,21 +34,21 @@ public class CommandDBMock {
     }
 
     private void init() throws SQLException, NotFoundException {
-        when(commandDBController.createCommand("First")).thenReturn(1);
-        when(commandDBController.createCommand("Second")).thenReturn(2);
-        when(commandDBController.createCommand("Third")).thenReturn(3);
+        when(commandDBConnector.createCommand("First")).thenReturn(1);
+        when(commandDBConnector.createCommand("Second")).thenReturn(2);
+        when(commandDBConnector.createCommand("Third")).thenReturn(3);
 
-        when(commandDBController.deleteCommand(anyInt())).thenReturn(true);
+        when(commandDBConnector.deleteCommand(anyInt())).thenReturn(true);
 
-        when(commandDBController.getName(1)).thenReturn("Third");
-        when(commandDBController.getName(2)).thenReturn("Second");
-        when(commandDBController.getName(3)).thenReturn("First");
+        when(commandDBConnector.getName(1)).thenReturn("Third");
+        when(commandDBConnector.getName(2)).thenReturn("Second");
+        when(commandDBConnector.getName(3)).thenReturn("First");
 
-        when(commandDBController.getId("First")).thenReturn(1);
-        when(commandDBController.getId("Second")).thenReturn(2);
-        when(commandDBController.getId("Third")).thenReturn(3);
+        when(commandDBConnector.getId("First")).thenReturn(1);
+        when(commandDBConnector.getId("Second")).thenReturn(2);
+        when(commandDBConnector.getId("Third")).thenReturn(3);
 
-        when(commandDBController.getCommands())
+        when(commandDBConnector.getCommands())
                 .thenReturn(new HashMap<>(Map.of(
                         1, "First",
                         2, "Second",
@@ -57,10 +57,10 @@ public class CommandDBMock {
     }
 
     private void setOurInstanceToBaseClass() throws NoSuchFieldException, IllegalAccessException {
-        Class clazz = CommandDBController.class;
+        Class clazz = CommandDBConnector.class;
 
         Field field = clazz.getDeclaredField("ourInstance");
         field.setAccessible(true);
-        field.set(CommandDBController.getInstance(), commandDBController);
+        field.set(CommandDBConnector.getInstance(), commandDBConnector);
     }
 }

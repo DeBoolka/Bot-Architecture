@@ -1,8 +1,8 @@
-package dikanev.nikita.core.controllers.db.groups;
+package dikanev.nikita.core.logic.connector.db.groups;
 
 import dikanev.nikita.core.api.exceptions.NotFoundException;
-import dikanev.nikita.core.controllers.db.commands.CommandDBController;
-import dikanev.nikita.core.controllers.db.users.UserDBController;
+import dikanev.nikita.core.logic.connector.db.commands.CommandDBConnector;
+import dikanev.nikita.core.logic.connector.db.users.UserDBConnector;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class AccessGroupDBController {
+public class AccessGroupDBConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessGroupDBController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccessGroupDBConnector.class);
 
-    private static AccessGroupDBController ourInstance = new AccessGroupDBController();
+    private static AccessGroupDBConnector ourInstance = new AccessGroupDBConnector();
 
-    public static AccessGroupDBController getInstance() {
+    public static AccessGroupDBConnector getInstance() {
         return ourInstance;
     }
 
@@ -64,10 +64,10 @@ public class AccessGroupDBController {
     public boolean createAccess(int idGroup, String command, boolean privilege) throws SQLException {
         int idCommand;
         try {
-            idCommand = CommandDBController.getInstance().getId(command);
+            idCommand = CommandDBConnector.getInstance().getId(command);
         } catch (NotFoundException e) {
             LOG.debug("Create new command: " + command);
-            idCommand = CommandDBController.getInstance().createCommand(command);
+            idCommand = CommandDBConnector.getInstance().createCommand(command);
         }
 
         return createAccess(idGroup, idCommand, privilege);
@@ -78,12 +78,12 @@ public class AccessGroupDBController {
         int[] idCommands = new int[nameCommands.length];
         try {
             for (int i = 0; i < nameCommands.length; i++) {
-                idCommands[i] = CommandDBController.getInstance().getId(nameCommands[i]);
+                idCommands[i] = CommandDBConnector.getInstance().getId(nameCommands[i]);
             }
         } catch (NotFoundException e) {
             LOG.debug("Create new command array name: ", e);
             for (int i = 0; i < nameCommands.length; i++) {
-                idCommands[i] = CommandDBController.getInstance().createCommand(nameCommands[i]);
+                idCommands[i] = CommandDBConnector.getInstance().createCommand(nameCommands[i]);
             }
         }
 
@@ -92,7 +92,7 @@ public class AccessGroupDBController {
 
     //Проверяет доступна ли комманда пользователю
     public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
-        int idGroup = UserDBController.getInstance().getGroup(idUser);
+        int idGroup = UserDBConnector.getInstance().getGroup(idUser);
         if (idGroup == -1) {
             return false;
         }
@@ -103,7 +103,7 @@ public class AccessGroupDBController {
     //Проверяет доступна ли комманда группе
     public boolean hasAccessGroup(int idGroup, int idCommand) throws SQLException {
         //Ищем имя команды
-        String commandName = CommandDBController.getInstance().getName(idCommand);
+        String commandName = CommandDBConnector.getInstance().getName(idCommand);
         if (commandName == null) {
             return false;
         }

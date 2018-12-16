@@ -1,4 +1,4 @@
-package dikanev.nikita.core.controllers.db;
+package dikanev.nikita.core.logic.connector.db;
 
 import dikanev.nikita.core.api.InviteIntoSystem;
 import dikanev.nikita.core.service.storage.DBStorage;
@@ -12,9 +12,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InviteDBController {
+public class InviteDBConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InviteDBController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InviteDBConnector.class);
 
     public static String createIntoSystem(int userId, int groupId) throws SQLException {
         String sql = "SELECT CREATE_INVITE_INTO_SYSTEM(?, ?) AS inv";
