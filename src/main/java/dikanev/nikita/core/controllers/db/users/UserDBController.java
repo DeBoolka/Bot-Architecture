@@ -68,18 +68,42 @@ public class UserDBController {
 
         String sql = "UPDATE user_info " +
                 "SET id_user = " + userInfo.getUserId() +
-                (userInfo.getLogin() != null ? ", login = '" + userInfo.getLogin() + "' " : "") +
-                (userInfo.getEmail() != null ? ", email = '" + userInfo.getEmail() + "' " : "") +
-                (userInfo.getAge() != null ? ", age = '" + userInfo.getAge().toString() + "' " : "") +
-                (userInfo.getPhone() != null ? ", phone = '" + userInfo.getPhone() + "' " : "") +
-                (userInfo.getCity() != null ? ", city = '" + userInfo.getCity() + "' " : "") +
-                (userInfo.getNameOnGame() != null ? ", game_name = '" + userInfo.getNameOnGame() + "' " : "") +
+                (userInfo.getLogin() != null ? ", login = ? " : "") +
+                (userInfo.getEmail() != null ? ", email = ? " : "") +
+                (userInfo.getAge() != null ? ", age = ? " : "") +
+                (userInfo.getPhone() != null ? ", phone = ? " : "") +
+                (userInfo.getCity() != null ? ", city = ? " : "") +
+                (userInfo.getNameOnGame() != null ? ", game_name = ? " : "") +
                 " WHERE id_user = " + userInfo.getUserId();
 
-        return DBStorage.getInstance()
-                .getConnection()
-                .prepareStatement(sql)
-                .executeUpdate() != 0;
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        int indexStatement = 1;
+        if (userInfo.getLogin() != null) {
+            prStatement.setString(indexStatement, userInfo.getLogin());
+            indexStatement++;
+        }
+        if (userInfo.getEmail() != null) {
+            prStatement.setString(indexStatement, userInfo.getEmail());
+            indexStatement++;
+        }
+        if (userInfo.getAge() != null) {
+            prStatement.setString(indexStatement, userInfo.getAge().toString());
+            indexStatement++;
+        }
+        if (userInfo.getPhone() != null) {
+            prStatement.setString(indexStatement, userInfo.getPhone());
+            indexStatement++;
+        }
+        if (userInfo.getCity() != null) {
+            prStatement.setString(indexStatement, userInfo.getCity());
+            indexStatement++;
+        }
+        if (userInfo.getNameOnGame() != null) {
+            prStatement.setString(indexStatement, userInfo.getNameOnGame());
+            indexStatement++;
+        }
+
+        return prStatement.executeUpdate() != 0;
 
     }
 

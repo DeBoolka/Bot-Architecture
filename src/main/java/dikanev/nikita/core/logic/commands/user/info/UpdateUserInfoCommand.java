@@ -36,7 +36,7 @@ public class UpdateUserInfoCommand extends Command {
         String gameOnName = null;
 
         if (!params.contains("login", "email", "age", "phone", "city", "gameOnName")) {
-            return new ExceptionObject(new InvalidParametersException(" "));
+            return new ExceptionObject(new InvalidParametersException("Parameter not found."));
         }
 
         if (params.contains("login")) {
@@ -64,7 +64,7 @@ public class UpdateUserInfoCommand extends Command {
         if (isUpdate) {
             return new MessageObject("OK");
         } else {
-            return new ExceptionObject(new InvalidParametersException("User is not found."));
+            return new ExceptionObject(new InvalidParametersException("User not found."));
         }
     }
 }

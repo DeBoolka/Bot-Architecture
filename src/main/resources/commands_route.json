@@ -70,5 +70,17 @@
     "route": "user/info/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.info.GetUserInfoCommand"
+  },
+  {
+    "id": 13,
+    "route": "user/info/update",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.info.UpdateUserInfoCommand"
+  },
+  {
+    "id": 14,
+    "route": "user/create/invite",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.create.CreateInvitesIntoSystemCommand"
   }
 ]
