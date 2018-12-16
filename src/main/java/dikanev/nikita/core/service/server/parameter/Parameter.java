@@ -143,6 +143,13 @@ public interface Parameter{
     /**
      *
      * @param params название параметров
+     * @return {@code true}, если есть один из параметров
+     */
+    boolean contains(String... params);
+
+    /**
+     *
+     * @param params название параметров
      * @return {@code true}, если есть параметры
      */
     boolean containsAll(List<String> params);

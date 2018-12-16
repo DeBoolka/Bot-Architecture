@@ -28,12 +28,12 @@ public class GetAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         int idGroup;
         List<String> commands;
         try {
-            idGroup = args.getIntF("id_group");
-            commands = args.get("cmd");
+            idGroup = params.getIntF("id_group");
+            commands = params.get("cmd");
             if (commands == null) {
                 return new ExceptionObject(new InvalidParametersException("Parameter cmd not found"));
             }

@@ -24,10 +24,10 @@ public class GetUserCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         int id;
         try {
-            id = args.getIntF("id");
+            id = params.getIntF("id");
         } catch (Exception e) {
             return new ExceptionObject(new InvalidParametersException("Insufficient number of param."));
         }

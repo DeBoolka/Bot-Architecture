@@ -19,8 +19,6 @@ public class UserDBController {
 
     private static UserDBController ourInstance = new UserDBController();
 
-    private PreparedStatement prStatement;
-
     public static UserDBController getInstance() {
         return ourInstance;
     }
@@ -66,11 +64,56 @@ public class UserDBController {
 
     }
 
+    public static boolean updateInfo(UserInfo userInfo) throws SQLException {
+
+        String sql = "UPDATE user_info " +
+                "SET id_user = " + userInfo.getUserId() +
+                (userInfo.getLogin() != null ? ", login = ? " : "") +
+                (userInfo.getEmail() != null ? ", email = ? " : "") +
+                (userInfo.getAge() != null ? ", age = ? " : "") +
+                (userInfo.getPhone() != null ? ", phone = ? " : "") +
+                (userInfo.getCity() != null ? ", city = ? " : "") +
+                (userInfo.getNameOnGame() != null ? ", game_name = ? " : "") +
+                " WHERE id_user = " + userInfo.getUserId();
+
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        int indexStatement = 1;
+        if (userInfo.getLogin() != null) {
+            prStatement.setString(indexStatement, userInfo.getLogin());
+            indexStatement++;
+        }
+        if (userInfo.getEmail() != null) {
+            prStatement.setString(indexStatement, userInfo.getEmail());
+            indexStatement++;
+        }
+        if (userInfo.getAge() != null) {
+            prStatement.setString(indexStatement, userInfo.getAge().toString());
+            indexStatement++;
+        }
+        if (userInfo.getPhone() != null) {
+            prStatement.setString(indexStatement, userInfo.getPhone());
+            indexStatement++;
+        }
+        if (userInfo.getCity() != null) {
+            prStatement.setString(indexStatement, userInfo.getCity());
+            indexStatement++;
+        }
+        if (userInfo.getNameOnGame() != null) {
+            prStatement.setString(indexStatement, userInfo.getNameOnGame());
+            indexStatement++;
+        }
+
+        int res = prStatement.executeUpdate();
+        prStatement.close();
+
+        return res != 0;
+    }
+
     //Создание человека
     public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
         String sql = "SELECT REGISTER_USER(?, ?, ?, ?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, email);
         prStatement.setString(2, sname);
         prStatement.setString(3, name);
@@ -82,6 +125,7 @@ public class UserDBController {
         while (res.next()) {
             userId = res.getInt(1);
         }
+        res.close();
 
         return userId;
     }
@@ -91,7 +135,7 @@ public class UserDBController {
         String sql = "INSERT INTO users(id_group, s_name, name) " +
                 "VALUES (?, ?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setString(2, sName);
         prStatement.setString(3, name);
@@ -111,7 +155,7 @@ public class UserDBController {
         String sql = "INSERT INTO users(id_group, s_name, name, id) " +
                 "VALUES (?, ?, ?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setString(2, sName);
         prStatement.setString(3, name);
@@ -133,7 +177,7 @@ public class UserDBController {
                 "WHERE id = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idUser);
         int countDelete = prStatement.executeUpdate();
         prStatement.close();
@@ -154,7 +198,7 @@ public class UserDBController {
                 "WHERE id = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idGroup);
         prStatement.setInt(2, idUser);
         int countUpdate = prStatement.executeUpdate();
@@ -175,7 +219,7 @@ public class UserDBController {
                 "WHERE id = ? " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idUser);
         ResultSet res = prStatement.executeQuery();
 
@@ -197,7 +241,7 @@ public class UserDBController {
                 "FROM (SELECT tokens.id FROM tokens WHERE token = ? LIMIT 1) AS tkn LEFT JOIN users USING(id) " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, hash);
         ResultSet res = prStatement.executeQuery();
 
@@ -220,7 +264,7 @@ public class UserDBController {
         String sql = "INSERT INTO tokens(token, id) " +
                 "VALUES (?, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, hash);
         prStatement.setInt(2, id);
         int countUpdate = prStatement.executeUpdate();
@@ -239,7 +283,7 @@ public class UserDBController {
         String sql = "DELETE FROM tokens " +
                 "WHERE id = ?";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, id);
         int countUpdate = prStatement.executeUpdate();
         prStatement.close();
@@ -263,7 +307,7 @@ public class UserDBController {
                 "WHERE id = ? " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idUser);
         ResultSet res = prStatement.executeQuery();
 

@@ -93,10 +93,10 @@ public abstract class Command {
     }
 
     //Перегружаемый метод с работой команды
-    protected abstract ApiObject work(User user, Parameter args) throws NoSuchFieldException, SQLException;
+    protected abstract ApiObject work(User user, Parameter params) throws NoSuchFieldException, SQLException;
 
     //Перегружаемый метод с обработкой аргументов
-    protected abstract PreparedParameter setupParameters(Parameter params);
+    protected abstract PreparedParameter setupParameters(Parameter params) throws InvalidParametersException;
 
     public Command setFreeAccess(boolean isFreeAccess) {
         this.isFreeAccess = isFreeAccess;
@@ -125,6 +125,15 @@ public abstract class Command {
         public PreparedParameter(String[][] validInputParameters, Map<String, ParameterHandler> consumerParameters) {
             this.validInputParameters = validInputParameters;
             this.consumerParameters = consumerParameters;
+        }
+
+        public PreparedParameter(String[] validInputParameters, Map<String, ParameterHandler> consumerParameters) {
+            this.validInputParameters = new String[][]{validInputParameters};
+            this.consumerParameters = consumerParameters;
+        }
+
+        public PreparedParameter(String... validInputParameters) {
+            this.validInputParameters = new String[][]{validInputParameters};
         }
     }
 

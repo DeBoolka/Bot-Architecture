@@ -17,7 +17,7 @@ public class CheckWorkCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
+    protected ApiObject work(User user, Parameter params) {
         return new MessageObject("Ok");
     }
 }

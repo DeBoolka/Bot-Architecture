@@ -31,20 +31,20 @@ public class CreateAccessGroupCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter args) {
-        if (!args.contains("id_group")) {
+    protected ApiObject work(User user, Parameter params) {
+        if (!params.contains("id_group")) {
             return new ExceptionObject(new NotFoundException("Not found group id"));
-        } else if (!args.contains("access")) {
+        } else if (!params.contains("access")) {
             return new ExceptionObject(new NotFoundException("Not found access"));
-        } else if (!args.contains("name") && !args.contains("id_command")) {
+        } else if (!params.contains("name") && !params.contains("id_command")) {
             return new ExceptionObject(new NotFoundException("Not found name or id_command"));
         }
 
         int idGroup;
         boolean access;
         try {
-            idGroup = args.getIntF("id_group");
-            access = Boolean.valueOf(args.getF("access"));
+            idGroup = params.getIntF("id_group");
+            access = Boolean.valueOf(params.getF("access"));
         } catch (Exception e) {
             return new ExceptionObject(new InvalidParametersException("id_group or access is invalid."));
         }
@@ -52,11 +52,11 @@ public class CreateAccessGroupCommand extends Command {
         List<String> names;
         List<Integer> idCommands;
         boolean response;
-        names = args.get("name");
+        names = params.get("name");
         try {
             if (names == null) {
                 try {
-                    idCommands = args.getInt("id_command");
+                    idCommands = params.getInt("id_command");
                 } catch (NumberFormatException e) {
                     return new ExceptionObject(new InvalidParametersException("id_command is invalid."));
                 }

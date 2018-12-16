@@ -70,5 +70,29 @@
     "route": "user/info/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.info.GetUserInfoCommand"
+  },
+  {
+    "id": 13,
+    "route": "user/info/update",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.info.UpdateUserInfoCommand"
+  },
+  {
+    "id": 14,
+    "route": "user/invite/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.CreateInvitesIntoSystemCommand"
+  },
+  {
+    "id": 15,
+    "route": "user/invite/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.GetInvitesIntoSystemCommand"
+  },
+  {
+    "id": 16,
+    "route": "user/invite/apply",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.ApplyInviteIntoSystem"
   }
 ]

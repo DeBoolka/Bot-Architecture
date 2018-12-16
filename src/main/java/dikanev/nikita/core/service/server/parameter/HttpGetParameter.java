@@ -137,6 +137,17 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
+    public boolean contains(String... params) {
+        for (String param : params) {
+            if (parameters.get(param) != null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean containsAll(List<String> params) {
         for (String param : params) {
             if (!parameters.containsKey(param)) {

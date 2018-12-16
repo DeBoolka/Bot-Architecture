@@ -32,6 +32,10 @@ public class UserController {
         return UserDBController.getInfo(-1, null, email);
     }
 
+    public static boolean updateInfo(UserInfo userInfo) throws SQLException {
+        return UserDBController.updateInfo(userInfo);
+    }
+
     //Создание человека
     public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
         return UserDBController.getInstance().registerUser(email, sname, name, idGroup, password);

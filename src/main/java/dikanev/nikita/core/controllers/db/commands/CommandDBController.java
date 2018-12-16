@@ -19,8 +19,6 @@ public class CommandDBController {
 
     private static CommandDBController ourInstance = new CommandDBController();
 
-    private PreparedStatement prStatement;
-
     public static CommandDBController getInstance() {
         return ourInstance;
     }
@@ -29,7 +27,7 @@ public class CommandDBController {
     public int createCommand(String name) throws SQLException {
         String sql = "INSERT commands(id, name) VALUES (NULL, ?)";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, name);
         int res = prStatement.executeUpdate();
         prStatement.close();
@@ -48,7 +46,7 @@ public class CommandDBController {
                 "WHERE id = ? " +
                 "LIMIT 1";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idCommand);
         int countDelete = prStatement.executeUpdate();
         prStatement.close();
@@ -76,7 +74,7 @@ public class CommandDBController {
                 "WHERE id = ? " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setInt(1, idCommand);
         ResultSet res = prStatement.executeQuery();
 
@@ -96,7 +94,7 @@ public class CommandDBController {
                 "WHERE name = ? " +
                 "LIMIT 1;";
 
-        prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, name);
         ResultSet res = prStatement.executeQuery();
 
