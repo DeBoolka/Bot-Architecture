@@ -73,6 +73,7 @@ public class CommandStorage {
                 v.setId(keyFromDB);
                 cacheNameCommand.put(keyFromDB, k);
             }
+            LOG.debug("Load command: " + k);
         });
 
         notContainedInDB.forEach((k, v) -> {

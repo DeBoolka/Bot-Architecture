@@ -206,6 +206,10 @@ class HttpGetParameterTest {
         assertTrue(parameter.containsVal("k2", "v2"));
         assertTrue(parameter.containsVal("k3", "3"));
         assertTrue(parameter.containsVal("k3", "v3"));
+        assertTrue(parameter.containsVal("k3", "v3", "5"));
+        assertTrue(parameter.containsVal("k3", "3", "5"));
+        assertTrue(parameter.containsVal("k3", "5", "v3"));
+        assertFalse(parameter.containsVal("k3", "5", "4"));
         assertTrue(parameter.containsVal("k4", "4"));
 
         assertFalse(parameter.containsVal("k1", "4"));

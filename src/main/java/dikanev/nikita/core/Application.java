@@ -22,9 +22,8 @@ public class Application {
 
     public static void  main(String... args) throws Exception{
 
-//        daemonize();
-
-//        registerShutdownHook();
+        daemonize();
+        registerShutdownHook();
 
         init();
 

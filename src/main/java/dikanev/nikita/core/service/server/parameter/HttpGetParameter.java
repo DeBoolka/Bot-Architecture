@@ -9,12 +9,14 @@ public class HttpGetParameter implements Parameter {
 
     private Map<String, List<String>> parameters;
 
+    private String transData = null;
+
     public HttpGetParameter() {
         this.parameters = new HashMap<>();
     }
 
     public HttpGetParameter(String parameters) throws UnsupportedEncodingException {
-        this.parameters = getMapFromHttpGet(parameters);
+        init(parameters);
     }
 
     public HttpGetParameter(String key, List<String> parameter) {
@@ -106,6 +108,22 @@ public class HttpGetParameter implements Parameter {
     }
 
     @Override
+    public Parameter clear() {
+        parameters.clear();
+        return this;
+    }
+
+    @Override
+    public Parameter set(String parameters) {
+        try {
+            init(parameters);
+        } catch (UnsupportedEncodingException e) {
+            this.parameters.clear();
+        }
+        return this;
+    }
+
+    @Override
     public Parameter set(String param, String val) {
         parameters.put(param, new ArrayList<>(List.of(val)));
         return this;
@@ -169,22 +187,32 @@ public class HttpGetParameter implements Parameter {
             return false;
         }
 
-            for (String temp : vals) {
-                if (!lst.contains(temp)) {
-                    return false;
-                }
+        for (String temp : vals) {
+            if (!lst.contains(temp)) {
+                return false;
             }
+        }
         return true;
     }
 
     @Override
-    public boolean containsVal(String param, String val) {
+    public boolean containsVal(String param, String val, String ... values) {
         List<String> lst = get(param);
         if (lst == null) {
             return false;
         }
 
-        return lst.contains(val);
+        boolean res = lst.contains(val);
+        if (res || values == null || values.length == 0) {
+            return res;
+        }
+
+        for (String temp : values) {
+            if (lst.contains(temp)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -227,6 +255,31 @@ public class HttpGetParameter implements Parameter {
         } catch (Exception ignore) {
         }
 
+        return this;
+    }
+
+    @Override
+    public Parameter transaction() {
+        transData = getContent();
+        return this;
+
+    }
+
+    @Override
+    public Parameter rollback() {
+        try {
+            if (transData != null) {
+                init(transData);
+            }
+        } catch (UnsupportedEncodingException ignored) {
+        }
+
+        return this;
+    }
+
+    @Override
+    public Parameter endTransaction() {
+        transData = null;
         return this;
     }
 
@@ -288,6 +341,10 @@ public class HttpGetParameter implements Parameter {
         }
 
         return query_pairs;
+    }
+
+    protected void init(String params) throws UnsupportedEncodingException {
+        this.parameters = getMapFromHttpGet(params);
     }
 
     private static String mapToGetString(Map<String, List<String>> params) {

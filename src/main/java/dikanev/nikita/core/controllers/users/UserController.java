@@ -1,5 +1,10 @@
 package dikanev.nikita.core.controllers.users;
 
+import com.google.gson.JsonObject;
+import dikanev.nikita.core.api.exceptions.InvalidParametersException;
+import dikanev.nikita.core.api.objects.ApiObject;
+import dikanev.nikita.core.api.objects.ExceptionObject;
+import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.users.UserDBConnector;
 import org.slf4j.Logger;
@@ -20,25 +25,41 @@ public class UserController {
         return ourInstance;
     }
 
-    public static UserInfo getInfo(int userId) throws SQLException {
-        return UserDBConnector.getInfo(userId, null, null);
+    public static UserInfo getInfo(int userId, String... columns) throws SQLException {
+        return UserDBConnector.getInfo(userId, null, null, columns);
     }
 
-    public static UserInfo getInfoByLogin(String login) throws SQLException {
-        return UserDBConnector.getInfo(-1, login, null);
+    public static UserInfo getInfoByLogin(String login, String... columns) throws SQLException {
+        return UserDBConnector.getInfo(-1, login, null, columns);
     }
 
-    public static UserInfo getInfoByEmail(String email) throws SQLException {
-        return UserDBConnector.getInfo(-1, null, email);
+    public static UserInfo getInfoByEmail(String email, String... columns) throws SQLException {
+        return UserDBConnector.getInfo(-1, null, email, columns);
     }
 
     public static boolean updateInfo(UserInfo userInfo) throws SQLException {
         return UserDBConnector.updateInfo(userInfo);
     }
 
+    public static boolean updateBaseInfo(User user) throws SQLException {
+        return UserDBConnector.updateBaseInfo(user);
+    }
+
+    public static JsonObject getUserAndUserInfo(int userId, String[] columns) throws SQLException {
+        return UserDBConnector.getInstance().getUserAndUserInfo(userId, null, null, columns);
+    }
+
+    public static JsonObject getUserAndUserInfoByLogin(String login, String[] columns) throws SQLException {
+        return UserDBConnector.getInstance().getUserAndUserInfo(-1, login, null, columns);
+    }
+
+    public static JsonObject getUserAndUserInfoByEmail(String email, String[] columns) throws SQLException {
+        return UserDBConnector.getInstance().getUserAndUserInfo(-1, null, email, columns);
+    }
+
     //Создание человека
-    public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
-        return UserDBConnector.getInstance().registerUser(email, sname, name, idGroup, password);
+    public int registerUser(String email, String login, String sname, String name, int idGroup, String password) throws SQLException {
+        return UserDBConnector.getInstance().registerUser(email, login, sname, name, idGroup, password);
     }
 
     //Создание человека
