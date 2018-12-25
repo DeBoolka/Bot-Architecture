@@ -26,6 +26,9 @@ public class User {
 
     private String name;
 
+    public User() {
+    }
+
     public User(int id, int idGroup, String sName, String name) {
         init(id, idGroup, sName, name);
     }
@@ -38,7 +41,7 @@ public class User {
         if (loadBd) {
             loadFromDB(id);
         } else {
-            init(id, 3, "", "");
+            init(id, DEFAULT_GROUP, "", "");
         }
     }
 
@@ -102,6 +105,22 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIdGroup(int idGroup) {
+        this.idGroup = idGroup;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     //Проверка доступа по текущей группе

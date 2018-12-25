@@ -102,7 +102,16 @@ public interface Parameter{
     int getIntFOrDefault(String param, int def);
 
     /**
+     * Устанавливает новые параметры
+     *
+     * @param parameters тело параметров
+     * @return текущий параметр
+     */
+    Parameter set(String parameters);
+
+    /**
      * Устанавливает значение параметра. Старое значение, если оно было - удаляет
+     *
      * @param param параметр
      * @param val значение параметра
      * @return Новый объект типа {@code Parameter}
@@ -111,6 +120,7 @@ public interface Parameter{
 
     /**
      * Устанавливает значение параметра. Старое значение, если оно было - удаляет
+     *
      * @param param параметр
      * @param val значение параметра
      * @return Новый объект типа {@code Parameter}
@@ -119,6 +129,7 @@ public interface Parameter{
 
     /**
      * Добавляет значение параметру. Если парамтра небыло, он создается.
+     *
      * @param param параметр
      * @param val значение параметра
      * @return Новый объект типа {@code Parameter}
@@ -127,6 +138,7 @@ public interface Parameter{
 
     /**
      * Добавляет значение параметру. Если парамтра небыло, он создается.
+     *
      * @param param параметр
      * @param val значение параметра
      * @return Новый объект типа {@code Parameter}
@@ -177,7 +189,7 @@ public interface Parameter{
      * @param val проверяемое значение
      * @return {@code true}, если значения есть в параметре
      */
-    boolean containsVal(String param, String val);
+    boolean containsVal(String param, String val, String... values);
 
     /**
      * Проверяет, что значение присутствует в параметре
@@ -187,6 +199,13 @@ public interface Parameter{
      * @return {@code true}, если значения есть в параметре
      */
     boolean containsVal(String param, int val);
+
+    /**
+     * Очищает все параметры
+     *
+     * @return новый объект типа {@code Parameter}
+     */
+    Parameter clear();
 
     /**
      * Удаляет параметр
@@ -216,6 +235,32 @@ public interface Parameter{
      */
     Parameter remove(String param, String val);
 
+    /**
+     * Сохраняет текующее состояние параметров
+     *
+     * @return текущий @{code Parameter}
+     */
+    Parameter transaction();
+
+    /**
+     * Возвращает состояние параметров к сохраненному ранее
+     *
+     * @return текущий @{code Parameter}
+     */
+    Parameter rollback();
+
+    /**
+     * Удаляет сохраненное раннее состояние
+     *
+     * @return текущий @{code Parameter}
+     */
+    Parameter endTransaction();
+
+    /**
+     * Проверяет пустой ли параметр
+     *
+     * @return {@code true}, если пустой
+     */
     boolean isEmpty();
 
     /**
