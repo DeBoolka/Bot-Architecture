@@ -142,6 +142,7 @@
           </archive>
           <excludes>
             <exclude>config.properties</exclude>
+            <exclude>commands_route.json</exclude>
           </excludes>
         </configuration>
       </plugin>

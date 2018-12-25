@@ -1,6 +1,7 @@
 package dikanev.nikita.core.logic.connector.db.users;
 
 import com.google.common.hash.Hashing;
+import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.SQLHelper;
 import dikanev.nikita.core.service.storage.DBStorage;
@@ -99,7 +100,6 @@ public class UserDBConnector {
         }
         if (userInfo.getNameOnGame() != null) {
             prStatement.setString(indexStatement, userInfo.getNameOnGame());
-            indexStatement++;
         }
 
         int res = prStatement.executeUpdate();
@@ -108,16 +108,46 @@ public class UserDBConnector {
         return res != 0;
     }
 
+    public static boolean updateBaseInfo(User user) throws SQLException {
+        String sql = "UPDATE users " +
+                "SET id = " + user.getId() +
+                (user.getName() != null ? ", name = ? " : "") +
+                (user.getsName() != null ? ", s_name = ? " : "") +
+                (user.getIdGroup() > 0 ? ", id_group = ? " : "") +
+                " WHERE id = " + user.getId();
+
+        PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
+        int indexStatement = 1;
+        if (user.getName() != null) {
+            prStatement.setString(indexStatement, user.getName());
+            indexStatement++;
+        }
+        if (user.getsName() != null) {
+            prStatement.setString(indexStatement, user.getsName());
+            indexStatement++;
+        }
+        if (user.getIdGroup() > 0) {
+            prStatement.setInt(indexStatement, user.getIdGroup());
+        }
+
+
+        int res = prStatement.executeUpdate();
+        prStatement.close();
+
+        return res != 0;
+    }
+
     //Создание человека
-    public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
-        String sql = "SELECT REGISTER_USER(?, ?, ?, ?, ?)";
+    public int registerUser(String email, String login, String sname, String name, int idGroup, String password) throws SQLException {
+        String sql = "SELECT REGISTER_USER(?, ?, ?, ?, ?, ?)";
 
         PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
         prStatement.setString(1, email);
-        prStatement.setString(2, sname);
-        prStatement.setString(3, name);
-        prStatement.setInt(4, idGroup);
-        prStatement.setString(5, password);
+        prStatement.setString(2, login);
+        prStatement.setString(3, sname);
+        prStatement.setString(4, name);
+        prStatement.setInt(5, idGroup);
+        prStatement.setString(6, password);
 
         ResultSet res = prStatement.executeQuery();
         int userId = -1;

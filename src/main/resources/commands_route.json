@@ -94,5 +94,11 @@
     "route": "user/invite/apply",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.invite.ApplyInviteIntoSystem"
+  },
+  {
+    "id": 17,
+    "route": "user/update",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UpdateUserCommand"
   }
 ]

@@ -96,6 +96,14 @@ public class User {
         return idGroup;
     }
 
+    public String getsName() {
+        return sName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     //Проверка доступа по текущей группе
     public boolean hasRightByGroup(int idCommand){
         return Group.hasRight(idGroup, idCommand);

@@ -1,5 +1,6 @@
 package dikanev.nikita.core.controllers.users;
 
+import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.users.UserDBConnector;
 import org.slf4j.Logger;
@@ -36,9 +37,13 @@ public class UserController {
         return UserDBConnector.updateInfo(userInfo);
     }
 
+    public static boolean updateBaseInfo(User user) throws SQLException {
+        return UserDBConnector.updateBaseInfo(user);
+    }
+
     //Создание человека
-    public int registerUser(String email, String sname, String name, int idGroup, String password) throws SQLException {
-        return UserDBConnector.getInstance().registerUser(email, sname, name, idGroup, password);
+    public int registerUser(String email, String login, String sname, String name, int idGroup, String password) throws SQLException {
+        return UserDBConnector.getInstance().registerUser(email, login, sname, name, idGroup, password);
     }
 
     //Создание человека
