@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/SrvltCallbackRequest")
 public class CallbackRequestHandler extends HttpServlet {
@@ -30,7 +31,8 @@ public class CallbackRequestHandler extends HttpServlet {
     }
 
     private void handler(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType("application/json; charset=UTF-8");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setStatus( HttpServletResponse.SC_OK );
 
@@ -46,6 +48,7 @@ public class CallbackRequestHandler extends HttpServlet {
                     responseObject = responseCommand.run(new HttpGetParameter(req.getParameterMap()));
                 }
 
+//                byte[] byteBufferRes = responseObject.getJson().getBytes(StandardCharsets.UTF_8);
                 pr.write(responseObject.getJson());
                 if (responseObject.getType().equals("error")) {
                     resp.setStatus(((ExceptionObject) responseObject).getCode());

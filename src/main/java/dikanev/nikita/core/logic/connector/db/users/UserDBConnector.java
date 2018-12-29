@@ -1,13 +1,13 @@
 package dikanev.nikita.core.logic.connector.db.users;
 
 import com.google.common.base.Joiner;
-import com.google.common.escape.Escaper;
-import com.google.common.escape.Escapers;
 import com.google.common.hash.Hashing;
 import com.google.gson.JsonObject;
+import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.SQLHelper;
+import dikanev.nikita.core.service.server.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+import java.sql.Date;
+import java.util.*;
 
 public class UserDBConnector {
 
@@ -77,10 +76,65 @@ public class UserDBConnector {
         return userInfo;
     }
 
+    public static Integer[] insertPhoto(int userId, String[] photos) throws SQLException, InvalidParametersException {
+        if (photos == null || photos.length == 0) {
+            throw new InvalidParametersException("Not found photos");
+        }
+
+        String sqlInsertPhoto = "INSERT INTO img SET link = ?";
+        String sqlLastIndexId = "SELECT LAST_INSERT_ID() AS id";
+        String sqlInsertUserPhoto = "INSERT INTO user_img SET id_user = ?, id_img = ?";
+        SQLRequest requestInsertPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertPhoto);
+        SQLRequest requestLastIndexId = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlLastIndexId);
+        SQLRequest requestInsertUserPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertUserPhoto);
+
+        ArrayList<Integer> photosId = new ArrayList<>(photos.length);
+
+        Arrays.stream(photos).forEach(it -> {
+            try {
+                int updateRes = requestInsertPhoto.set(p -> p.setString(1, it)).executeUpdate();
+                if (updateRes > 0) {
+                    int photoId = SQLHelper.moveFirstRow(requestLastIndexId.executeQuery()).getInt("id");
+                    photosId.add(photoId);
+                    requestInsertUserPhoto.set(p -> p.setInt(1, userId)).set(p -> p.setInt(2, photoId)).executeUpdate();
+                }
+            } catch (SQLException e) {
+                LOG.error("Failed insert photo: " + it, e);
+            }
+        });
+
+        requestInsertPhoto.close();
+        requestLastIndexId.close();
+        requestInsertUserPhoto.close();
+
+        return photosId.toArray(new Integer[]{});
+    }
+
+    public static boolean deletePhoto(int userId, Integer... photosId) throws SQLException {
+        if (photosId == null || photosId.length == 0) {
+            throw new IllegalStateException("Not found photoId");
+        }
+
+        //todo: Добавить внешнии ключи в таблице user_img и ее подобных, чтобы не следить вручную за целостностью данных
+        String sqlImg = "DELETE FROM img WHERE id = ?";
+        String sqlUserImg = "DELETE FROM user_img WHERE id_img = ?";
+        SQLRequest reqImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlImg);
+        SQLRequest reqUserImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlUserImg);
+
+        for (int photo : photosId) {
+            reqImg.set(p -> p.setInt(1, photo)).executeUpdate();
+            reqUserImg.set(p -> p.setInt(1, photo)).executeUpdate();
+        }
+
+        reqImg.close();
+        reqUserImg.close();
+        return true;
+    }
+
     public JsonObject getUserAndUserInfo(int userId, String login, String email, String... columns) throws SQLException {
         String cols;
         if (columns != null) {
-            cols = Joiner.on(", ").join(Arrays.stream(columns).map(it -> escape(it, "UTF-8")).toArray());
+            cols = Joiner.on(", ").join(Arrays.stream(columns).map(this::escape).toArray());
             cols = cols.replaceAll("userId", "id")
                     .replaceAll("nameOnGame", "game_name")
                     .replaceAll("groupId", "id_group");
@@ -134,9 +188,9 @@ public class UserDBConnector {
         return js;
     }
 
-    private String escape(String it, String format) {
+    private String escape(String it) {
         try {
-            return URLEncoder.encode(it, format);
+            return URLEncoder.encode(it, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             LOG.warn("Failed escape word.", e);
         }
@@ -311,11 +365,7 @@ public class UserDBConnector {
         int countUpdate = prStatement.executeUpdate();
         prStatement.close();
 
-        if (countUpdate == 0) {
-            return false;
-        }
-
-        return true;
+        return countUpdate != 0;
     }
 
     //Получение информации о человеке.
@@ -440,7 +490,8 @@ public class UserDBConnector {
                 js.addProperty(prop, res.getInt(col));
                 break;
             case "date":
-                js.addProperty(prop, res.getDate(col).toString());
+                Date date = res.getDate(col);
+                js.addProperty(prop, date != null ? date.toString() : null);
                 break;
         }
     }

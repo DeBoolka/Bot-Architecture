@@ -4,9 +4,11 @@ import com.google.gson.JsonObject;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
+import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.users.UserDBConnector;
+import org.checkerframework.checker.nullness.compatqual.NonNullType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +57,14 @@ public class UserController {
 
     public static JsonObject getUserAndUserInfoByEmail(String email, String[] columns) throws SQLException {
         return UserDBConnector.getInstance().getUserAndUserInfo(-1, null, email, columns);
+    }
+
+    public static Integer[] insertPhoto(int userId, String... photos) throws SQLException, InvalidParametersException {
+        return UserDBConnector.insertPhoto(userId, photos);
+    }
+
+    public static boolean deletePhoto(int userId, @NonNullType Integer... photoId) throws SQLException {
+        return UserDBConnector.deletePhoto(userId, photoId);
     }
 
     //Создание человека

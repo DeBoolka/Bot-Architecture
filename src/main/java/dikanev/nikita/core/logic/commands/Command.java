@@ -93,7 +93,7 @@ public abstract class Command {
     }
 
     //Перегружаемый метод с работой команды
-    protected abstract ApiObject work(User user, Parameter params) throws NoSuchFieldException, SQLException;
+    protected abstract ApiObject work(User user, Parameter params) throws ApiException, SQLException, NoSuchFieldException;
 
     //Перегружаемый метод с обработкой аргументов
     protected abstract PreparedParameter setupParameters(Parameter params) throws InvalidParametersException;
