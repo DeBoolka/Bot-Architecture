@@ -135,6 +135,12 @@ public class HttpGetParameter implements Parameter {
         return this;
     }
 
+    public Parameter add(String params) throws UnsupportedEncodingException {
+        Map<String, List<String>> param = getMapFromHttpGet(params);
+        param.forEach(this::add);
+        return this;
+    }
+
     @Override
     public Parameter add(String param, String val) {
         List<String> lst = parameters.computeIfAbsent(param, k -> new ArrayList<>());
