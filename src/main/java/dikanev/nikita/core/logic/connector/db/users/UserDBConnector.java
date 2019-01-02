@@ -1,13 +1,13 @@
 package dikanev.nikita.core.logic.connector.db.users;
 
 import com.google.common.base.Joiner;
-import com.google.common.escape.Escaper;
-import com.google.common.escape.Escapers;
 import com.google.common.hash.Hashing;
 import com.google.gson.JsonObject;
+import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.SQLHelper;
+import dikanev.nikita.core.service.server.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+import java.sql.Date;
+import java.util.*;
 
 public class UserDBConnector {
 
@@ -77,10 +76,78 @@ public class UserDBConnector {
         return userInfo;
     }
 
+    public static Map<Integer, String> insertPhoto(int idUserCreator, int userId, String[] photos) throws SQLException, InvalidParametersException {
+        if (photos == null || photos.length == 0) {
+            throw new InvalidParametersException("Not found photos");
+        }
+
+        String sqlInsertPhoto = "INSERT INTO img SET user_creator = ?, id_owner = ?, link = ?, shown = 'user'";
+        String sqlLastIndexId = "SELECT LAST_INSERT_ID() AS id";
+        SQLRequest requestLastIndexId = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlLastIndexId);
+        SQLRequest requestInsertPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertPhoto)
+                                            .set(p -> p.setInt(1, idUserCreator))
+                                            .set(p -> p.setInt(2, userId));
+
+        Map<Integer, String> photosIdMap = new HashMap<>(photos.length);
+
+        Arrays.stream(photos).forEach(it -> {
+            try {
+                int updateRes = requestInsertPhoto.set(p -> p.setString(3, it)).executeUpdate();
+                if (updateRes > 0) {
+                    int photoId = SQLHelper.moveFirstRow(requestLastIndexId.executeQuery()).getInt("id");
+                    photosIdMap.put(photoId, it);
+                }
+            } catch (SQLException e) {
+                LOG.error("Failed insert photo: " + it, e);
+            }
+        });
+
+        requestInsertPhoto.close();
+        requestLastIndexId.close();
+
+        return photosIdMap;
+    }
+
+    public static boolean deletePhoto(Integer... photosId) throws SQLException {
+        if (photosId == null || photosId.length == 0) {
+            throw new IllegalStateException("Not found photoId");
+        }
+
+        String sqlImg = "DELETE FROM img WHERE id = ?";
+        SQLRequest reqImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlImg);
+
+        for (int photo : photosId) {
+            reqImg.set(p -> p.setInt(1, photo)).executeUpdate();
+        }
+
+        reqImg.close();
+        return true;
+    }
+
+    public static Map<Integer, String> getPhoto(Integer[] photosId) throws SQLException {
+        if (photosId == null || photosId.length == 0) {
+            throw new IllegalStateException("Not found photoId");
+        }
+
+        String preparedPhotosId = Joiner.on(", ").join(Arrays.stream(photosId).map(String::valueOf).toArray());
+        String sql = "SELECT id, link FROM img WHERE id IN (" + preparedPhotosId + ")";
+        SQLRequest reqImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sql);
+
+        ResultSet res = reqImg.executeQuery();
+        Map<Integer, String> respPhotos = new HashMap<>(photosId.length);
+
+        while (res.next()) {
+            respPhotos.put(res.getInt("id"), res.getString("link"));
+        }
+
+        res.close();
+        return respPhotos;
+    }
+
     public JsonObject getUserAndUserInfo(int userId, String login, String email, String... columns) throws SQLException {
         String cols;
         if (columns != null) {
-            cols = Joiner.on(", ").join(Arrays.stream(columns).map(it -> escape(it, "UTF-8")).toArray());
+            cols = Joiner.on(", ").join(Arrays.stream(columns).map(UserDBConnector::escape).toArray());
             cols = cols.replaceAll("userId", "id")
                     .replaceAll("nameOnGame", "game_name")
                     .replaceAll("groupId", "id_group");
@@ -134,9 +201,9 @@ public class UserDBConnector {
         return js;
     }
 
-    private String escape(String it, String format) {
+    private static String escape(String it) {
         try {
-            return URLEncoder.encode(it, format);
+            return URLEncoder.encode(it, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             LOG.warn("Failed escape word.", e);
         }
@@ -311,11 +378,7 @@ public class UserDBConnector {
         int countUpdate = prStatement.executeUpdate();
         prStatement.close();
 
-        if (countUpdate == 0) {
-            return false;
-        }
-
-        return true;
+        return countUpdate != 0;
     }
 
     //Получение информации о человеке.
@@ -440,7 +503,8 @@ public class UserDBConnector {
                 js.addProperty(prop, res.getInt(col));
                 break;
             case "date":
-                js.addProperty(prop, res.getDate(col).toString());
+                Date date = res.getDate(col);
+                js.addProperty(prop, date != null ? date.toString() : null);
                 break;
         }
     }

@@ -16,7 +16,7 @@ public class ApiException extends Exception {
     }
 
     public ApiException(Integer code, String message) {
-        this(code, "Unknown", message);
+        this(code, "", message);
     }
 
     public String getDescription() {

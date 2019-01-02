@@ -100,5 +100,23 @@
     "route": "user/update",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UpdateUserCommand"
+  },
+  {
+    "id": 18,
+    "route": "user/photo/insert",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.photo.AddPhotoCommand"
+  },
+  {
+    "id": 19,
+    "route": "user/photo/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.photo.DeletePhotoCommand"
+  },
+  {
+    "id": 20,
+    "route": "user/photo/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.photo.GetPhotoCommand"
   }
 ]

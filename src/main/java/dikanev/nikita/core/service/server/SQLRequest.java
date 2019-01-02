@@ -11,7 +11,6 @@ public class SQLRequest {
 
     private PreparedStatement prStatement;
 
-
     public SQLRequest(Connection connection) {
         this.connection = connection;
     }
@@ -37,7 +36,9 @@ public class SQLRequest {
     }
 
     public SQLRequest close() throws SQLException {
-        prStatement.close();
+        if (!prStatement.isClosed()) {
+            prStatement.close();
+        }
         return this;
     }
 
