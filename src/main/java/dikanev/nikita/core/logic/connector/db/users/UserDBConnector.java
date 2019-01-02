@@ -76,27 +76,26 @@ public class UserDBConnector {
         return userInfo;
     }
 
-    public static Integer[] insertPhoto(int userId, String[] photos) throws SQLException, InvalidParametersException {
+    public static Map<Integer, String> insertPhoto(int idUserCreator, int userId, String[] photos) throws SQLException, InvalidParametersException {
         if (photos == null || photos.length == 0) {
             throw new InvalidParametersException("Not found photos");
         }
 
-        String sqlInsertPhoto = "INSERT INTO img SET link = ?";
+        String sqlInsertPhoto = "INSERT INTO img SET user_creator = ?, id_owner = ?, link = ?, shown = 'user'";
         String sqlLastIndexId = "SELECT LAST_INSERT_ID() AS id";
-        String sqlInsertUserPhoto = "INSERT INTO user_img SET id_user = ?, id_img = ?";
-        SQLRequest requestInsertPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertPhoto);
         SQLRequest requestLastIndexId = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlLastIndexId);
-        SQLRequest requestInsertUserPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertUserPhoto);
+        SQLRequest requestInsertPhoto = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlInsertPhoto)
+                                            .set(p -> p.setInt(1, idUserCreator))
+                                            .set(p -> p.setInt(2, userId));
 
-        ArrayList<Integer> photosId = new ArrayList<>(photos.length);
+        Map<Integer, String> photosIdMap = new HashMap<>(photos.length);
 
         Arrays.stream(photos).forEach(it -> {
             try {
-                int updateRes = requestInsertPhoto.set(p -> p.setString(1, it)).executeUpdate();
+                int updateRes = requestInsertPhoto.set(p -> p.setString(3, it)).executeUpdate();
                 if (updateRes > 0) {
                     int photoId = SQLHelper.moveFirstRow(requestLastIndexId.executeQuery()).getInt("id");
-                    photosId.add(photoId);
-                    requestInsertUserPhoto.set(p -> p.setInt(1, userId)).set(p -> p.setInt(2, photoId)).executeUpdate();
+                    photosIdMap.put(photoId, it);
                 }
             } catch (SQLException e) {
                 LOG.error("Failed insert photo: " + it, e);
@@ -105,36 +104,50 @@ public class UserDBConnector {
 
         requestInsertPhoto.close();
         requestLastIndexId.close();
-        requestInsertUserPhoto.close();
 
-        return photosId.toArray(new Integer[]{});
+        return photosIdMap;
     }
 
-    public static boolean deletePhoto(int userId, Integer... photosId) throws SQLException {
+    public static boolean deletePhoto(Integer... photosId) throws SQLException {
         if (photosId == null || photosId.length == 0) {
             throw new IllegalStateException("Not found photoId");
         }
 
-        //todo: Добавить внешнии ключи в таблице user_img и ее подобных, чтобы не следить вручную за целостностью данных
         String sqlImg = "DELETE FROM img WHERE id = ?";
-        String sqlUserImg = "DELETE FROM user_img WHERE id_img = ?";
         SQLRequest reqImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlImg);
-        SQLRequest reqUserImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sqlUserImg);
 
         for (int photo : photosId) {
             reqImg.set(p -> p.setInt(1, photo)).executeUpdate();
-            reqUserImg.set(p -> p.setInt(1, photo)).executeUpdate();
         }
 
         reqImg.close();
-        reqUserImg.close();
         return true;
+    }
+
+    public static Map<Integer, String> getPhoto(Integer[] photosId) throws SQLException {
+        if (photosId == null || photosId.length == 0) {
+            throw new IllegalStateException("Not found photoId");
+        }
+
+        String preparedPhotosId = Joiner.on(", ").join(Arrays.stream(photosId).map(String::valueOf).toArray());
+        String sql = "SELECT id, link FROM img WHERE id IN (" + preparedPhotosId + ")";
+        SQLRequest reqImg = new SQLRequest(DBStorage.getInstance().getConnection()).build(sql);
+
+        ResultSet res = reqImg.executeQuery();
+        Map<Integer, String> respPhotos = new HashMap<>(photosId.length);
+
+        while (res.next()) {
+            respPhotos.put(res.getInt("id"), res.getString("link"));
+        }
+
+        res.close();
+        return respPhotos;
     }
 
     public JsonObject getUserAndUserInfo(int userId, String login, String email, String... columns) throws SQLException {
         String cols;
         if (columns != null) {
-            cols = Joiner.on(", ").join(Arrays.stream(columns).map(this::escape).toArray());
+            cols = Joiner.on(", ").join(Arrays.stream(columns).map(UserDBConnector::escape).toArray());
             cols = cols.replaceAll("userId", "id")
                     .replaceAll("nameOnGame", "game_name")
                     .replaceAll("groupId", "id_group");
@@ -188,7 +201,7 @@ public class UserDBConnector {
         return js;
     }
 
-    private String escape(String it) {
+    private static String escape(String it) {
         try {
             return URLEncoder.encode(it, "UTF-8");
         } catch (UnsupportedEncodingException e) {

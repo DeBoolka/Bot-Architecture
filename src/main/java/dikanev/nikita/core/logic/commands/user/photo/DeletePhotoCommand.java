@@ -21,7 +21,7 @@ public class DeletePhotoCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter params) throws ApiException, SQLException, NoSuchFieldException {
+    protected ApiObject work(User user, Parameter params) throws SQLException {
         List<Integer> photosId = new ArrayList<>();
 
         try {
@@ -30,13 +30,13 @@ public class DeletePhotoCommand extends Command {
             return new ExceptionObject(new InvalidParametersException("Incorrect photoId parameter."));
         }
 
-        boolean isDelete = UserController.deletePhoto(user.getId(), photosId.toArray(new Integer[]{}));
+        boolean isDelete = UserController.deletePhoto(photosId.toArray(new Integer[]{}));
 
         return new MessageObject(isDelete ? "Ok" : "No");
     }
 
     @Override
-    protected PreparedParameter setupParameters(Parameter params) throws InvalidParametersException {
+    protected PreparedParameter setupParameters(Parameter params) {
         return new PreparedParameter(new String[]{"photoId"}, Map.of(
                 "photoId", ((parameter, val) -> !parameter.get("photoId").isEmpty() ? null : "Incorrect photoId parameter.")
         ));

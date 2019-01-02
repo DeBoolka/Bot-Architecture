@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.objects.ApiObject;
-import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.JObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.users.UserController;
@@ -13,12 +12,11 @@ import dikanev.nikita.core.logic.commands.Command;
 import dikanev.nikita.core.service.server.parameter.Parameter;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class InsertPhotoCommand extends Command {
-    public InsertPhotoCommand(int id) {
+public class AddPhotoCommand extends Command {
+    public AddPhotoCommand(int id) {
         super(id);
     }
 
@@ -33,14 +31,19 @@ public class InsertPhotoCommand extends Command {
             }
         }
 
-        Integer[] photosId = UserController.insertPhoto(userId, links.toArray(new String[]{}));
+        Map<Integer, String> photosId = UserController.insertPhoto(userId, links.toArray(new String[]{}));
         JsonObject jsRoot = new JsonObject();
         JsonArray jsArray = new JsonArray();
 
-        Arrays.stream(photosId).forEach(jsArray::add);
+        photosId.forEach((id, link) -> {
+            JsonObject jsPhoto = new JsonObject();
+            jsPhoto.addProperty("id", id);
+            jsPhoto.addProperty("link", link);
+            jsArray.add(jsPhoto);
+        });
 
         jsRoot.addProperty("type", "array");
-        jsRoot.addProperty("typeObjects", "integer");
+        jsRoot.addProperty("typeObjects", "photo");
         jsRoot.add("objects", jsArray);
 
         return new JObject(jsRoot);

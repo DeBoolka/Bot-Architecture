@@ -57,7 +57,7 @@ public abstract class Command {
         try {
             checkingParameters(args);
             return work(user, args);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NumberFormatException e) {
             return new ExceptionObject(new ApiException(400, e.getMessage()));
         }  catch (InvalidParametersException | NoSuchFieldException e) {
             return new ExceptionObject(new InvalidParametersException(e.getMessage()));

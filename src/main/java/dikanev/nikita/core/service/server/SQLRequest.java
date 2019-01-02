@@ -11,7 +11,6 @@ public class SQLRequest {
 
     private PreparedStatement prStatement;
 
-
     public SQLRequest(Connection connection) {
         this.connection = connection;
     }

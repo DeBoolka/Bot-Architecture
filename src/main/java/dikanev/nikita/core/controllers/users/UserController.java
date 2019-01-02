@@ -59,12 +59,16 @@ public class UserController {
         return UserDBConnector.getInstance().getUserAndUserInfo(-1, null, email, columns);
     }
 
-    public static Integer[] insertPhoto(int userId, String... photos) throws SQLException, InvalidParametersException {
-        return UserDBConnector.insertPhoto(userId, photos);
+    public static Map<Integer, String> insertPhoto(int userId, String... photos) throws SQLException, InvalidParametersException {
+        return UserDBConnector.insertPhoto(userId, userId, photos);
     }
 
-    public static boolean deletePhoto(int userId, @NonNullType Integer... photoId) throws SQLException {
-        return UserDBConnector.deletePhoto(userId, photoId);
+    public static boolean deletePhoto(@NonNullType Integer... photoId) throws SQLException {
+        return UserDBConnector.deletePhoto(photoId);
+    }
+
+    public static Map<Integer, String> getPhoto(Integer[] photosId) throws SQLException {
+        return UserDBConnector.getPhoto(photosId);
     }
 
     //Создание человека
