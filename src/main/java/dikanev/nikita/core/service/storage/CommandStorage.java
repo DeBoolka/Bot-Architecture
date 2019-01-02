@@ -2,10 +2,12 @@ package dikanev.nikita.core.service.storage;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dikanev.nikita.core.controllers.commands.CommandController;
 import dikanev.nikita.core.logic.commands.Command;
 
+import dikanev.nikita.core.service.server.CommandParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,11 @@ public class CommandStorage {
 
     private String routeConflict = "IGNORE";
 
+    private final int ROUTE = 0;
+    private final int CLASS_NAME = 1;
+    private final int COMMAND_NAME = 2;
+    private final int HEADERS = 3;
+
     public static CommandStorage getInstance() {
         return instance;
     }
@@ -37,7 +44,14 @@ public class CommandStorage {
     public void init(String pathToCommandsRoute, String routeConflict) {
         getCommands(pathToCommandsRoute).forEach((key, val) ->{
             try {
-                addCommand(val[0], (Command) Class.forName(val[1]).getDeclaredConstructor(int.class).newInstance(key));
+                CommandParser cmdParser = new CommandParser(val[ROUTE]);
+                if (val[HEADERS] != null) {
+                    cmdParser.parseJsonHeaders(val[HEADERS]);
+                }
+
+                Command instCommand = (Command) Class.forName(val[CLASS_NAME]).getDeclaredConstructor(int.class).newInstance(key);
+                instCommand.setCommandParser(cmdParser);
+                addCommand(val[ROUTE], instCommand);
             } catch (Exception e) {
                 LOG.error("Init command error: ", e);
             }
@@ -114,10 +128,17 @@ public class CommandStorage {
 
             commandsJson.iterator().forEachRemaining(command -> {
                 JsonObject jo = command.getAsJsonObject();
+                JsonElement jsHeaders;
+                String headers = null;
+                if ((jsHeaders = jo.get("headers")) != null) {
+                    headers = jsHeaders.toString();
+                }
+
                 commands.put(jo.get("id").getAsInt()
                         , new String[]{jo.get("route").getAsString()
                                      , jo.get("class").getAsString()
-                                     , jo.get("name").getAsString()});
+                                     , jo.get("name").getAsString()
+                                     , headers});
             });
         } catch (IOException e) {
             LOG.error("Commands route file not found. ", e);

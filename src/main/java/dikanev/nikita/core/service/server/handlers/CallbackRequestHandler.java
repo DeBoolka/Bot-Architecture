@@ -6,6 +6,7 @@ import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.logic.commands.Command;
+import dikanev.nikita.core.service.server.CommandParser;
 import dikanev.nikita.core.service.server.parameter.HttpGetParameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.slf4j.Logger;
@@ -36,19 +37,23 @@ public class CallbackRequestHandler extends HttpServlet {
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setStatus( HttpServletResponse.SC_OK );
 
-        String commandName = req.getPathInfo().substring(1);
+        CommandParser commandParser = commandParse(req);
         ApiObject responseObject;
 
         try (PrintWriter pr = resp.getWriter()) {
             try {
-                Command responseCommand = CommandStorage.getInstance().getCommand(commandName);
+                Command responseCommand = CommandStorage.getInstance().getCommand(commandParser.getRoute());
                 if (responseCommand == null) {
                     responseObject = new ExceptionObject(new NotFoundException("Command not found."));
                 } else {
-                    responseObject = responseCommand.run(new HttpGetParameter(req.getParameterMap()));
+                    HttpGetParameter parameters = new HttpGetParameter(req.getParameterMap());
+                    if (commandParser.headers.contains("O-Parameters")) {
+                        parameters.add(commandParser.headers.getF("O-Parameters"));
+                    }
+
+                    responseObject = responseCommand.run(parameters, commandParser);
                 }
 
-//                byte[] byteBufferRes = responseObject.getJson().getBytes(StandardCharsets.UTF_8);
                 pr.write(responseObject.getJson());
                 if (responseObject.getType().equals("error")) {
                     resp.setStatus(((ExceptionObject) responseObject).getCode());
@@ -65,6 +70,13 @@ public class CallbackRequestHandler extends HttpServlet {
             LOG.warn("The client could not be contacted. Error: ", ex);
             resp.setStatus( HttpServletResponse.SC_BAD_REQUEST );
         }
+    }
+
+    private CommandParser commandParse(HttpServletRequest req) {
+        CommandParser commandParser = new CommandParser(req.getPathInfo().substring(1));
+        commandParser.parseHttpHeaders(req);
+
+        return commandParser;
     }
 
     @Override

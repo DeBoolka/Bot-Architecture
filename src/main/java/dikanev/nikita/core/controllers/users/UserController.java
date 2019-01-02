@@ -71,6 +71,9 @@ public class UserController {
         return UserDBConnector.getPhoto(photosId);
     }
 
+    public static Map<Integer, String> getPhotoByUser(int userId, int indentPhoto, int countPhoto) throws SQLException {
+        return UserDBConnector.getPhotoByUser(userId, indentPhoto, countPhoto);
+    }
     //Создание человека
     public int registerUser(String email, String login, String sname, String name, int idGroup, String password) throws SQLException {
         return UserDBConnector.getInstance().registerUser(email, login, sname, name, idGroup, password);

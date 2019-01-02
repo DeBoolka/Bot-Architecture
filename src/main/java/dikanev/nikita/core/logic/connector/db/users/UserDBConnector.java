@@ -144,6 +144,28 @@ public class UserDBConnector {
         return respPhotos;
     }
 
+    public static Map<Integer, String> getPhotoByUser(int userId, int indentPhoto, int countPhoto) throws SQLException {
+        if (indentPhoto < 0 || countPhoto <= 0) {
+            return null;
+        }
+
+        String sql = "SELECT id, link FROM img WHERE id_owner = ? AND shown = 'user' LIMIT ?, ?";
+        SQLRequest req = new SQLRequest(DBStorage.getInstance().getConnection()).build(sql)
+                .set(p -> p.setInt(1, userId))
+                .set(p -> p.setInt(2, indentPhoto))
+                .set(p -> p.setInt(3, countPhoto));
+
+        ResultSet res = req.executeQuery();
+
+        Map<Integer, String> photos = new HashMap<>();
+        while (res.next()) {
+            photos.put(res.getInt("id"), res.getString("link"));
+        }
+
+        res.close();
+        return photos;
+    }
+
     public JsonObject getUserAndUserInfo(int userId, String login, String email, String... columns) throws SQLException {
         String cols;
         if (columns != null) {
