@@ -1,4 +1,4 @@
-package dikanev.nikita.core.logic.commands.user.photo;
+package dikanev.nikita.core.logic.commands.user;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,12 +26,12 @@ public class UserPhotoCommand extends Command {
     }
 
     @Override
-    protected ApiObject work(User user, Parameter params) throws ApiException, SQLException, NoSuchFieldException {
+    protected ApiObject work(User user, Parameter params) {
         return null;
     }
 
     @Override
-    protected PreparedParameter setupParameters(Parameter params) throws InvalidParametersException {
+    protected PreparedParameter setupParameters(Parameter params) {
         return new PreparedParameter(new String[][]{
                 new String[]{"photoId"},
                 new String[]{"userId", "link"},
@@ -75,7 +75,7 @@ public class UserPhotoCommand extends Command {
     }
 
     private ApiObject addPhoto(Parameter params) throws NoSuchFieldException, InvalidParametersException, SQLException {
-        if (params.contains("link")) {
+        if (!params.contains("link")) {
             return new ExceptionObject(new InvalidParametersException("Not found link"));
         }
 
@@ -111,14 +111,14 @@ public class UserPhotoCommand extends Command {
         int countPhoto;
         try {
             userId = params.getIntF("userId");
-            indentPhoto = params.contains("indent") ? params.getIntF("indent") : 0;
-            countPhoto = params.contains("count") ? params.getIntF("count") : 5;
+            indentPhoto = params.getIntFOrDefault("indent", 0);
+            countPhoto = params.getIntFOrDefault("count", 5);
         } catch (NoSuchFieldException | NumberFormatException ex) {
             return new ExceptionObject(new InvalidParametersException("Incorrect count or indent parameter."));
         }
 
         Map<Integer, String> photos = UserController.getPhotoByUser(userId, indentPhoto, countPhoto);
-        return getApiObject(photos);
+        return photos != null ? getApiObject(photos) : new ExceptionObject(new InvalidParametersException("Incorrect count or indent parameter."));
     }
 
     private ApiObject getApiObject(Map<Integer, String> photos) {
