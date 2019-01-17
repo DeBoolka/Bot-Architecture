@@ -118,5 +118,11 @@
     "route": "user/photo.get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
+  },
+  {
+    "id": 21,
+    "route": "user/ammunition.add",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
   }
 ]
