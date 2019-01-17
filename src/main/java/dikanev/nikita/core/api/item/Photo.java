@@ -23,7 +23,7 @@ public class Photo {
         this.shown = shown;
     }
 
-    public Photo(int id, int userCreatorId, int userOwnerId, String link, String[] shown) {
+    public Photo(int id, int userCreatorId, int userOwnerId, String link, String... shown) {
         this.id = id;
         this.userCreatorId = userCreatorId;
         this.ownerId = userOwnerId;

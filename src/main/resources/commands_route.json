@@ -124,5 +124,11 @@
     "route": "user/ammunition.add",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "id": 22,
+    "route": "user/ammunition.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
   }
 ]
