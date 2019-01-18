@@ -37,7 +37,7 @@ public class UserPhotoCommand extends Command {
                 new String[]{"userId", "link"},
                 new String[]{"userId"}
         }, Map.of(
-                "photoId", ((parameter, val) -> !parameter.get("photoId").isEmpty() ? null : "Incorrect photoId parameter."),
+                "photoId", ((parameter, val) -> !parameter.get("photoId").isEmpty() && parameter.isInt("photoId") ? null : "Incorrect photoId parameter."),
                 "userId", ((parameter, val) -> parameter.isIntF("userId") ? null : "Incorrect userId parameter."),
                 "link", ((parameter, val) -> parameter.get("link").isEmpty() ? "Incorrect link parameter." : null)
         ));
@@ -61,16 +61,9 @@ public class UserPhotoCommand extends Command {
     }
 
     private ApiObject deletePhoto(Parameter params) throws SQLException {
-        List<Integer> photosId = new ArrayList<>();
-
-        try {
-            params.get("photoId").forEach(it -> photosId.add(Integer.valueOf(it)));
-        } catch (Exception e) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect photoId parameter."));
-        }
+        List<Integer> photosId = params.getInt("photoId");
 
         boolean isDelete = UserController.deletePhoto(photosId.toArray(new Integer[]{}));
-
         return new MessageObject(isDelete ? "Ok" : "No");
     }
 
@@ -93,15 +86,9 @@ public class UserPhotoCommand extends Command {
     }
 
     private ApiObject getPhoto(Parameter params) throws SQLException {
-        List<Integer> photosId;
-
-        try {
-            photosId = params.get("photoId").stream().map(Integer::valueOf).collect(Collectors.toList());
-        } catch (Exception e) {
-            return new ExceptionObject(new InvalidParametersException("Incorrect photoId parameter."));
-        }
-
+        List<Integer> photosId = params.getInt("photoId");
         Map<Integer, String> photos = UserController.getPhoto(photosId.toArray(new Integer[]{}));
+
         return getApiObject(photos);
     }
 

@@ -72,8 +72,8 @@ public abstract class Command {
         }
     }
 
-    protected ApiObject ChoiceStartPointOfWork(User user, Parameter args, CommandParser commandParser) throws NoSuchFieldException, ApiException, SQLException {
-        return work(user, args);
+    protected ApiObject ChoiceStartPointOfWork(User user, Parameter params, CommandParser commandParser) throws NoSuchFieldException, ApiException, SQLException {
+        return work(user, params);
     }
 
     private void checkingParameters(Parameter parameter) throws InvalidParametersException {
