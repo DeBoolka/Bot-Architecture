@@ -32,15 +32,16 @@ public class UserAmmunitionCommand extends Command {
     }
 
     @Override
-    protected ApiObject ChoiceStartPointOfWork(User user, Parameter args, CommandParser commandParser) throws NoSuchFieldException, ApiException, SQLException {
+    protected ApiObject ChoiceStartPointOfWork(User user, Parameter params, CommandParser commandParser) throws NoSuchFieldException, ApiException, SQLException {
         switch (commandParser.headers.getF(HEADER_ENTER_POINT).toLowerCase()) {
             case "get":
-                return getAmmunition(args);
+                return getAmmunition(params);
             case "add":
-                return addAmmunition(args);
+                return addAmmunition(params);
             case "delete":
+                return deleteAmmunition(params);
             default:
-                return super.ChoiceStartPointOfWork(user, args, commandParser);
+                return super.ChoiceStartPointOfWork(user, params, commandParser);
         }
     }
 
@@ -49,8 +50,10 @@ public class UserAmmunitionCommand extends Command {
         return new PreparedParameter(new String[][]{
                 new String[]{"userId", "name"},
                 new String[]{"userId"},
+                new String[]{"ammunitionId"},
         }, Map.of(
                 "userId", ((parameter, val) -> parameter.isIntF("userId") ? null : "Incorrect userId parameter."),
+                "ammunitionId", ((parameter, val) -> parameter.isInt("ammunitionId") ? null : "Incorrect ammunitionId parameter."),
                 "name", ((parameter, val) -> parameter.getF("name").length() > 127 || parameter.getF("name").isEmpty() ? "Incorrect name parameter." : null)
         ));
     }
@@ -98,4 +101,12 @@ public class UserAmmunitionCommand extends Command {
         Ammo ammo = AmmunitionController.addAmmunition(userId, ammoName, photo.toArray(new String[0]));
         return new JObject("Ammunition", gson.toJsonTree(ammo).getAsJsonObject());
     }
+
+    private ApiObject deleteAmmunition(Parameter params) throws SQLException {
+        List<Integer> ammunitionId = params.getInt("ammunitionId");
+
+        boolean isGoodDelete = AmmunitionController.deleteAmmunition(ammunitionId.toArray(new Integer[0]));
+        return new MessageObject(isGoodDelete ? "Ok" : "No");
+    }
+
 }

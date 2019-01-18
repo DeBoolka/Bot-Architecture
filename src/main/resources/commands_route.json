@@ -130,5 +130,11 @@
     "route": "user/ammunition.get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "id": 23,
+    "route": "user/ammunition.delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
   }
 ]

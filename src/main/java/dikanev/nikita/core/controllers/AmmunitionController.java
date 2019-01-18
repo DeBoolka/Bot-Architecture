@@ -18,4 +18,8 @@ public class AmmunitionController {
     public static List<Ammo> getAmmunition(int userId, int indent, int count) throws SQLException {
         return AmmunitionDBConnector.getAmmunition(userId, indent, count);
     }
+
+    public static boolean deleteAmmunition(Integer[] ammunitionId) throws SQLException {
+        return AmmunitionDBConnector.deleteAmmunition(ammunitionId);
+    }
 }
