@@ -59,7 +59,7 @@ public class User {
     //Загружает данные из БД
     public void loadFromDB(int idUser) {
         try {
-            Map<String, Object> resMap = UserController.getInstance().getData(idUser);
+            Map<String, Object> resMap = UserController.getData(idUser);
             id = idUser;
             idGroup = (Integer) resMap.get("id_group");
             sName = (String) resMap.get("s_name");
@@ -77,7 +77,7 @@ public class User {
     //Загружает данные из БД
     public void loadFromDB(String hash) throws NoAccessException {
         try {
-            Map<String, Object> resMap = UserController.getInstance().getData(hash);
+            Map<String, Object> resMap = UserController.getData(hash);
             if (resMap == null) {
                 throw new NoAccessException("The token was not found.");
             }
@@ -131,7 +131,7 @@ public class User {
     //Проверка доступа по id
     public static boolean hasRightByUser(int idUser, int idCommand){
         try {
-            return AccessGroupController.getInstance().hasAccessUser(idUser, idCommand);
+            return AccessGroupController.hasAccessUser(idUser, idCommand);
         } catch (SQLException ignore) {
         }
 
@@ -146,7 +146,7 @@ public class User {
     //Создание токена
     public String createToken() {
         try {
-            return UserController.getInstance().createToken(id);
+            return UserController.createToken(id);
         } catch (SQLException ignore) {
         }
 

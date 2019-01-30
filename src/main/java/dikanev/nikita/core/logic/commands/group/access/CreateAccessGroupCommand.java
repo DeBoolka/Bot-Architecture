@@ -61,9 +61,9 @@ public class CreateAccessGroupCommand extends Command {
                     return new ExceptionObject(new InvalidParametersException("id_command is invalid."));
                 }
 
-                response = AccessGroupController.getInstance().createAccess(idGroup, Ints.toArray( idCommands), access);
+                response = AccessGroupController.createAccess(idGroup, Ints.toArray( idCommands), access);
             } else {
-                response = AccessGroupController.getInstance().createAccess(idGroup, names.toArray(new String[0]), access);
+                response = AccessGroupController.createAccess(idGroup, names.toArray(new String[0]), access);
             }
         } catch (SQLException e) {
             LOG.error("SQL request error: ", e);

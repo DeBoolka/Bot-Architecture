@@ -32,7 +32,7 @@ public class DeleteGroupCommand extends Command {
 
         boolean response;
         try {
-            response = GroupController.getInstance().deleteGroup(idGroup);
+            response = GroupController.deleteGroup(idGroup);
         } catch (SQLException e) {
             return new ExceptionObject(new InvalidParametersException("Create a group in the database."));
         }

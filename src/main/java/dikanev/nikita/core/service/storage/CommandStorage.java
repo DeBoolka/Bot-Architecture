@@ -126,6 +126,7 @@ public class CommandStorage {
         try (FileReader scanner = new FileReader(pathToCommandsRoute)) {
             commandsJson = gson.fromJson(scanner, JsonArray.class);
 
+            final int[] idCommand = {1};
             commandsJson.iterator().forEachRemaining(command -> {
                 JsonObject jo = command.getAsJsonObject();
                 JsonElement jsHeaders;
@@ -134,7 +135,7 @@ public class CommandStorage {
                     headers = jsHeaders.toString();
                 }
 
-                commands.put(jo.get("id").getAsInt()
+                commands.put(idCommand[0]++
                         , new String[]{jo.get("route").getAsString()
                                      , jo.get("class").getAsString()
                                      , jo.get("name").getAsString()

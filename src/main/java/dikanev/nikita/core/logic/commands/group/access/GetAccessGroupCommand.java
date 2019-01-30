@@ -43,7 +43,7 @@ public class GetAccessGroupCommand extends Command {
 
         Map<String, Boolean> commandsAccess;
         try {
-            commandsAccess = AccessGroupController.getInstance().getAccessGroup(idGroup, commands);
+            commandsAccess = AccessGroupController.getAccessGroup(idGroup, commands);
         } catch (SQLException e) {
             return new ExceptionObject(new UnidentifiedException(e.getMessage()));
         }

@@ -34,7 +34,7 @@ public class ApplyInviteIntoSystem extends Command {
             return new ExceptionObject(new InvalidParametersException("User not found"));
         }
 
-        return new GroupObject(newGroup, GroupController.getInstance().getName(newGroup));
+        return new GroupObject(newGroup, GroupController.getName(newGroup));
     }
 
     @Override

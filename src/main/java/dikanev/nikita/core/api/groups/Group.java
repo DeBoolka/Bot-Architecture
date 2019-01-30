@@ -35,7 +35,7 @@ public class Group {
     //Загрузка параметров из БД
     public void loadFromDB() {
         try {
-            this.name = GroupController.getInstance().getName(this.id);
+            this.name = GroupController.getName(this.id);
         } catch (SQLException e) {
             LOG.error("Error in loadFromDB: ", e);
             this.name = "";
@@ -45,7 +45,7 @@ public class Group {
     //Проверка на доступ к команде по id группы
     public static boolean hasRight(int idGroup, int idCommand){
         try {
-            return AccessGroupController.getInstance().hasAccessGroup(idGroup, idCommand);
+            return AccessGroupController.hasAccessGroup(idGroup, idCommand);
         } catch (SQLException e) {
             LOG.warn("Error in hasRight: ", e);
         }

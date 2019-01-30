@@ -36,7 +36,7 @@ public class GetUserCommand extends Command {
         String sName;
         String name;
         try {
-            Map<String, Object> data = UserController.getInstance().getData(id);
+            Map<String, Object> data = UserController.getData(id);
 
             if (data.size() < 3) {
                 return new ExceptionObject(new NotFoundException("User not found"));
