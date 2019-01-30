@@ -13,39 +13,31 @@ import java.util.Map;
 public class AccessGroupController {
     private static final Logger LOG = LoggerFactory.getLogger(AccessGroupController.class);
 
-    private static AccessGroupController ourInstance = new AccessGroupController();
-
-    private PreparedStatement prStatement;
-
-    public static AccessGroupController getInstance() {
-        return ourInstance;
-    }
-
     //Устанавливает доступ к команде для группы
-    public boolean createAccess(int idGroup, int idCommand, boolean privilege) throws SQLException {
+    public static boolean createAccess(int idGroup, int idCommand, boolean privilege) throws SQLException {
         return AccessGroupDBConnector.getInstance().createAccess(idGroup, idCommand, privilege);
     }
 
     //Устанавливает доступ к командам для группы
-    public boolean createAccess(int idGroup, int[] idCommands, boolean privilege) throws SQLException {
+    public static boolean createAccess(int idGroup, int[] idCommands, boolean privilege) throws SQLException {
         return AccessGroupDBConnector.getInstance().createAccess(idGroup, idCommands, privilege);
     }
 
-    public boolean createAccess(int idGroup, String command, boolean privilege) throws SQLException{
+    public static boolean createAccess(int idGroup, String command, boolean privilege) throws SQLException{
         return AccessGroupDBConnector.getInstance().createAccess(idGroup, command, privilege);
     }
 
-    public boolean createAccess(int idGroup, String[] nameCommands, boolean privilege) throws SQLException {
+    public static boolean createAccess(int idGroup, String[] nameCommands, boolean privilege) throws SQLException {
         return AccessGroupDBConnector.getInstance().createAccess(idGroup, nameCommands, privilege);
     }
 
     //Проверяет доступна ли комманда пользователю
-    public boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
+    public static boolean hasAccessUser(int idUser, int idCommand) throws SQLException {
         return AccessGroupDBConnector.getInstance().hasAccessUser(idUser, idCommand);
     }
 
     //Проверяет доступна ли комманда группе
-    public boolean hasAccessGroup(int idGroup, int idCommand) throws SQLException {
+    public static boolean hasAccessGroup(int idGroup, int idCommand) throws SQLException {
         String commandName = CommandController.getInstance().getName(idCommand);
         if (commandName != null) {
             return AccessGroupDBConnector.getInstance().hasAccessGroup(idGroup, commandName);
@@ -54,22 +46,22 @@ public class AccessGroupController {
     }
 
     //Проверяет доступна ли комманда группе
-    public boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
+    public static boolean hasAccessGroup(int idGroup, String commandName) throws SQLException {
         return AccessGroupDBConnector.getInstance().hasAccessGroup(idGroup, commandName);
     }
 
     //Возвращает доступность команд для группы
-    public Map<String, Boolean> getAccessGroup(int idGroup, List<String> commandsName) throws SQLException {
+    public static Map<String, Boolean> getAccessGroup(int idGroup, List<String> commandsName) throws SQLException {
         return AccessGroupDBConnector.getInstance().getAccessGroup(idGroup, commandsName);
     }
 
     //Изменяет доступ к команде для группы
-    public boolean editAccess(int idGroup, int idCommand, boolean privilege) throws SQLException {
+    public static boolean editAccess(int idGroup, int idCommand, boolean privilege) throws SQLException {
         return AccessGroupDBConnector.getInstance().editAccess(idGroup, idCommand, privilege);
     }
 
     //Удаляет из БД запись с доступом к команде
-    public boolean deleteAccess(int idGroup, int idCommand) throws SQLException {
+    public static boolean deleteAccess(int idGroup, int idCommand) throws SQLException {
         return AccessGroupDBConnector.getInstance().deleteAccess(idGroup, idCommand);
     }
 }

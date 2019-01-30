@@ -33,7 +33,7 @@ public class GetGroupCommand extends Command {
 
         String name;
         try {
-            name = GroupController.getInstance().getName(idGroup);
+            name = GroupController.getName(idGroup);
             if (name == null) {
                 return new ExceptionObject(new NotFoundException("Group not found"));
             }

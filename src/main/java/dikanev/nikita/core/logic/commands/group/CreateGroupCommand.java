@@ -41,9 +41,9 @@ public class CreateGroupCommand extends Command {
 
         try {
             if (isIdParameter) {
-                id = GroupController.getInstance().createGroup(name, id);
+                id = GroupController.createGroup(name, id);
             } else {
-                id = GroupController.getInstance().createGroup(name);
+                id = GroupController.createGroup(name);
             }
         } catch (SQLException e) {
             return new ExceptionObject(new InvalidParametersException("Create a group in the database."));

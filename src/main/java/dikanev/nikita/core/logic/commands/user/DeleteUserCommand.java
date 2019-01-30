@@ -33,7 +33,7 @@ public class DeleteUserCommand extends Command {
 
 
         try {
-            boolean hasDelete = UserController.getInstance().deleteUser(id);
+            boolean hasDelete = UserController.deleteUser(id);
             if (hasDelete) {
                 return new MessageObject("Ok");
             } else {

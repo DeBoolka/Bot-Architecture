@@ -32,7 +32,7 @@ public class CreateTokenCommand extends Command {
         }
 
         try {
-            String token = UserController.getInstance().createToken(id);
+            String token = UserController.createToken(id);
             return new MessageObject(token);
         } catch (SQLException e) {
             return new ExceptionObject(new InvalidParametersException("Create a user in the database."));

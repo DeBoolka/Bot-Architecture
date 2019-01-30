@@ -27,10 +27,10 @@ class AccessGroupControllerTest {
     void hasAccessUser() {
         int idUser = 4;
         try {
-            assertTrue(AccessGroupController.getInstance().hasAccessUser(idUser, 2));
-            assertFalse(AccessGroupController.getInstance().hasAccessUser(idUser, 1));
-            assertFalse(AccessGroupController.getInstance().hasAccessUser(idUser, 11));
-            assertFalse(AccessGroupController.getInstance().hasAccessUser(idUser, 6));
+            assertTrue(AccessGroupController.hasAccessUser(idUser, 2));
+            assertFalse(AccessGroupController.hasAccessUser(idUser, 1));
+            assertFalse(AccessGroupController.hasAccessUser(idUser, 11));
+            assertFalse(AccessGroupController.hasAccessUser(idUser, 6));
         } catch (Exception e) {
             assertNotNull(null);
         }
@@ -40,10 +40,10 @@ class AccessGroupControllerTest {
     void hasAccessGroup() {
         int idGroup = 2;
         try {
-            assertTrue(AccessGroupController.getInstance().hasAccessGroup(idGroup, 2));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, 1));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, 11));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, 6));
+            assertTrue(AccessGroupController.hasAccessGroup(idGroup, 2));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, 1));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, 11));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, 6));
         } catch (Exception e) {
             assertNotNull(null);
         }
@@ -53,10 +53,10 @@ class AccessGroupControllerTest {
     void hasAccessGroup1() {
         int idGroup = 2;
         try {
-            assertTrue(AccessGroupController.getInstance().hasAccessGroup(idGroup, "user/delete"));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, "user/register"));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, "group/"));
-            assertFalse(AccessGroupController.getInstance().hasAccessGroup(idGroup, "group/delete"));
+            assertTrue(AccessGroupController.hasAccessGroup(idGroup, "user/delete"));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, "user/register"));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, "group/"));
+            assertFalse(AccessGroupController.hasAccessGroup(idGroup, "group/delete"));
         } catch (Exception e) {
             assertNotNull(null);
         }

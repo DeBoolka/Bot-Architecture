@@ -1,138 +1,120 @@
 [
   {
-    "id": 1,
     "route": "user/register",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.RegisterUserCommand"
   },
   {
-    "id": 2,
     "route": "user/delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.DeleteUserCommand"
   },
   {
-    "id": 3,
+    "route": "user.access",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.AccessUserCommand"
+  },
+  {
     "route": "user/create/token",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.create.CreateTokenCommand"
   },
   {
-    "id": 4,
     "route": "user/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.GetUserCommand"
   },
   {
-    "id": 5,
     "route": "group/create",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.CreateGroupCommand"
   },
   {
-    "id": 6,
     "route": "group/delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.DeleteGroupCommand"
   },
   {
-    "id": 7,
     "route": "group/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.GetGroupCommand"
   },
   {
-    "id": 8,
     "route": "group/access/create",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.access.CreateAccessGroupCommand"
   },
   {
-    "id": 9,
     "route": "group/access/delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.access.DeleteAccessGroupCommand"
   },
   {
-    "id": 10,
     "route": "check/work",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.check.CheckWorkCommand"
   },
   {
-    "id": 11,
     "route": "group/access/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand"
   },
   {
-    "id": 12,
     "route": "user/info/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.info.GetUserInfoCommand"
   },
   {
-    "id": 13,
     "route": "user/info/update",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.info.UpdateUserInfoCommand"
   },
   {
-    "id": 14,
     "route": "user/invite/create",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.invite.CreateInvitesIntoSystemCommand"
   },
   {
-    "id": 15,
     "route": "user/invite/get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.invite.GetInvitesIntoSystemCommand"
   },
   {
-    "id": 16,
     "route": "user/invite/apply",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.invite.ApplyInviteIntoSystem"
   },
   {
-    "id": 17,
     "route": "user/update",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UpdateUserCommand"
   },
   {
-    "id": 18,
     "route": "user/photo.add",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
   },
   {
-    "id": 19,
     "route": "user/photo.delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
   },
   {
-    "id": 20,
     "route": "user/photo.get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
   },
   {
-    "id": 21,
     "route": "user/ammunition.add",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
   },
   {
-    "id": 22,
     "route": "user/ammunition.get",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
   },
   {
-    "id": 23,
     "route": "user/ammunition.delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"

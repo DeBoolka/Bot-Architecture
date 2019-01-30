@@ -46,7 +46,7 @@ public class DeleteAccessGroupCommand extends Command {
             if (nameCommand != null) {
                 idCommand = CommandController.getInstance().getId(nameCommand);
             }
-            response = AccessGroupController.getInstance().deleteAccess(idGroup, idCommand);
+            response = AccessGroupController.deleteAccess(idGroup, idCommand);
         } catch (SQLException | NotFoundException e) {
             return new ExceptionObject(new InvalidParametersException("Delete a group in the database."));
         }

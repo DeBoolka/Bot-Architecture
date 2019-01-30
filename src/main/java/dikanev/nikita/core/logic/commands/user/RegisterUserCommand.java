@@ -74,7 +74,7 @@ public class RegisterUserCommand extends Command {
 
         int idUser;
         try {
-            idUser = UserController.getInstance().registerUser(email, login, sName, name, idGroup, password);
+            idUser = UserController.registerUser(email, login, sName, name, idGroup, password);
         } catch (SQLException e) {
             return new ExceptionObject(new InvalidParametersException("Create a user in the database."));
         }

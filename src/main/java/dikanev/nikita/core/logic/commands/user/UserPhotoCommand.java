@@ -15,10 +15,8 @@ import dikanev.nikita.core.service.server.CommandParser;
 import dikanev.nikita.core.service.server.parameter.Parameter;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class UserPhotoCommand extends Command {
     public UserPhotoCommand(int id) {
