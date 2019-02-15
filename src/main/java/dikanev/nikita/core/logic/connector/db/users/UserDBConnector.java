@@ -7,7 +7,7 @@ import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.logic.connector.db.SQLHelper;
-import dikanev.nikita.core.service.server.SQLRequest;
+import dikanev.nikita.core.service.item.sql.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

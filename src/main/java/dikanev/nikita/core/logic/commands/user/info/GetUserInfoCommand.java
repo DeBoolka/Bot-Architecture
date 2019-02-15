@@ -10,7 +10,7 @@ import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.api.users.UserInfo;
 import dikanev.nikita.core.controllers.users.UserController;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.parameter.Parameter;
+import dikanev.nikita.core.service.item.parameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;

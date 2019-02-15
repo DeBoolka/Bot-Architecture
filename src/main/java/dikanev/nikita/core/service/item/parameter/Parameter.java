@@ -1,4 +1,4 @@
-package dikanev.nikita.core.service.server.parameter;
+package dikanev.nikita.core.service.item.parameter;
 
 import java.util.*;
 
@@ -276,4 +276,10 @@ public interface Parameter{
      * @return {@code true}, если первый параметр является целым числом
      */
     boolean isIntF(String param);
+
+    /**
+     *
+     * @return {@code Set}, с именами параметров
+     */
+    Set<String> keySet();
 }

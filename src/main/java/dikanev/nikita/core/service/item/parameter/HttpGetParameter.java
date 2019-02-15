@@ -1,4 +1,4 @@
-package dikanev.nikita.core.service.server.parameter;
+package dikanev.nikita.core.service.item.parameter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -371,5 +371,10 @@ public class HttpGetParameter implements Parameter {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return parameters.keySet();
     }
 }

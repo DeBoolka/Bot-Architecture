@@ -1,4 +1,4 @@
-package dikanev.nikita.core.service.server;
+package dikanev.nikita.core.service.item.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

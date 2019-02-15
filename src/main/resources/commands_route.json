@@ -118,5 +118,18 @@
     "route": "user/ammunition.delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "route": "game/all.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand"
+  },
+  {
+    "route": "game/my.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR-USER": "true"
+    }
   }
 ]

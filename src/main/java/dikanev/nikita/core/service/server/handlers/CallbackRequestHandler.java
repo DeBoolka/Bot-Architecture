@@ -7,7 +7,7 @@ import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.logic.commands.Command;
 import dikanev.nikita.core.service.server.CommandParser;
-import dikanev.nikita.core.service.server.parameter.HttpGetParameter;
+import dikanev.nikita.core.service.item.parameter.HttpGetParameter;
 import dikanev.nikita.core.service.storage.CommandStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 
 @WebServlet("/SrvltCallbackRequest")
 public class CallbackRequestHandler extends HttpServlet {
@@ -39,37 +38,45 @@ public class CallbackRequestHandler extends HttpServlet {
 
         CommandParser commandParser = commandParse(req);
         ApiObject responseObject;
+        int status = 200;
 
         try (PrintWriter pr = resp.getWriter()) {
             try {
                 Command responseCommand = CommandStorage.getInstance().getCommand(commandParser.getRoute());
-                if (responseCommand == null) {
-                    responseObject = new ExceptionObject(new NotFoundException("Command not found."));
-                } else {
-                    HttpGetParameter parameters = new HttpGetParameter(req.getParameterMap());
-                    if (commandParser.headers.contains("O-Parameters")) {
-                        parameters.add(commandParser.headers.getF("O-Parameters"));
-                    }
-
-                    responseObject = responseCommand.run(parameters, commandParser);
-                }
+                responseObject = getResponseObject(responseCommand, commandParser, req);
 
                 pr.write(responseObject.getJson());
                 if (responseObject.getType().equals("error")) {
-                    resp.setStatus(((ExceptionObject) responseObject).getCode());
+                    status = ((ExceptionObject) responseObject).getCode();
                 }
             } catch (NoAccessException e) {
                 pr.write(new ExceptionObject(e).getJson());
-                resp.setStatus(403);
+                status = 403;
             } catch (Exception e) {
                 LOG.error("Server error: ", e);
                 pr.write(new ExceptionObject(new ApiException(500, "Server error.")).getJson());
-                resp.setStatus(500);
+                status = 500;
             }
+            resp.setStatus(status);
         } catch (IOException ex) {
             LOG.warn("The client could not be contacted. Error: ", ex);
             resp.setStatus( HttpServletResponse.SC_BAD_REQUEST );
         }
+    }
+
+    private ApiObject getResponseObject(Command responseCommand, CommandParser commandParser, HttpServletRequest req) throws Exception {
+        if (responseCommand == null) {
+            return new ExceptionObject(new NotFoundException("Command not found."));
+        }
+        commandParser.addHeaders(responseCommand.getCommandParser().headers);
+
+        HttpGetParameter parameters = new HttpGetParameter(req.getParameterMap());
+        if (commandParser.headers.contains("O-Parameters")) {
+            parameters.add(commandParser.headers.getF("O-Parameters"));
+        }
+
+        return responseCommand.run(parameters, commandParser);
+
     }
 
     private CommandParser commandParse(HttpServletRequest req) {

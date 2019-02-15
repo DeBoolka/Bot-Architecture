@@ -1,17 +1,14 @@
 package dikanev.nikita.core.logic.commands.user.invite;
 
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
-import dikanev.nikita.core.api.exceptions.UnidentifiedException;
-import dikanev.nikita.core.api.groups.Group;
 import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.ExceptionObject;
 import dikanev.nikita.core.api.objects.GroupObject;
-import dikanev.nikita.core.api.objects.UnknownObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.InviteController;
 import dikanev.nikita.core.controllers.groups.GroupController;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.parameter.Parameter;
+import dikanev.nikita.core.service.item.parameter.Parameter;
 
 import java.sql.SQLException;
 import java.util.Map;
