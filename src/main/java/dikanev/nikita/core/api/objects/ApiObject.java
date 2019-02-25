@@ -1,10 +1,11 @@
 package dikanev.nikita.core.api.objects;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class ApiObject {
 
-    private static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     private String type;
 

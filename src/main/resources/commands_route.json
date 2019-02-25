@@ -1,0 +1,182 @@
+[
+  {
+    "route": "user/register",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.RegisterUserCommand"
+  },
+  {
+    "route": "user/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.DeleteUserCommand"
+  },
+  {
+    "route": "user.access",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.AccessUserCommand"
+  },
+  {
+    "route": "user/create/token",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.create.CreateTokenCommand"
+  },
+  {
+    "route": "user/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.GetUserCommand"
+  },
+  {
+    "route": "group/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.CreateGroupCommand"
+  },
+  {
+    "route": "group/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.DeleteGroupCommand"
+  },
+  {
+    "route": "group/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.GetGroupCommand"
+  },
+  {
+    "route": "group/access/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.CreateAccessGroupCommand"
+  },
+  {
+    "route": "group/access/delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.DeleteAccessGroupCommand"
+  },
+  {
+    "route": "check/work",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.check.CheckWorkCommand"
+  },
+  {
+    "route": "group/access/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.group.access.GetAccessGroupCommand"
+  },
+  {
+    "route": "user/info/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.info.GetUserInfoCommand"
+  },
+  {
+    "route": "user/info/update",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.info.UpdateUserInfoCommand"
+  },
+  {
+    "route": "user/invite/create",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.CreateInvitesIntoSystemCommand"
+  },
+  {
+    "route": "user/invite/get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.GetInvitesIntoSystemCommand"
+  },
+  {
+    "route": "user/invite/apply",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.invite.ApplyInviteIntoSystem"
+  },
+  {
+    "route": "user/update",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UpdateUserCommand"
+  },
+  {
+    "route": "user/photo.add",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
+  },
+  {
+    "route": "user/photo.delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
+  },
+  {
+    "route": "user/photo.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserPhotoCommand"
+  },
+  {
+    "route": "user/ammunition.add",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "route": "user/ammunition.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "route": "user/ammunition.delete",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "route": "game/all.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "ALL"
+    }
+  },
+  {
+    "route": "game/my.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "USER"
+    }
+  },
+  {
+    "route": "game.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "GAME"
+    }
+  },
+  {
+    "route": "game/user.signup",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game/user.issigned",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game/roles.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand",
+    "headers": {
+      "O-FOR": "ROLES"
+    }
+  },
+  {
+    "route": "game/role.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand",
+    "headers": {
+      "O-FOR": "ROLE"
+    }
+  },
+  {
+    "route": "game/test.check",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game.register",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  }
+]

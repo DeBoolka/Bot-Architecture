@@ -2,8 +2,8 @@ package dikanev.nikita.core.api.users;
 
 import dikanev.nikita.core.api.exceptions.NoAccessException;
 import dikanev.nikita.core.api.groups.Group;
-import dikanev.nikita.core.controller.groups.AccessGroupController;
-import dikanev.nikita.core.controller.users.UserController;
+import dikanev.nikita.core.controllers.groups.AccessGroupController;
+import dikanev.nikita.core.controllers.users.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +26,9 @@ public class User {
 
     private String name;
 
+    public User() {
+    }
+
     public User(int id, int idGroup, String sName, String name) {
         init(id, idGroup, sName, name);
     }
@@ -38,7 +41,7 @@ public class User {
         if (loadBd) {
             loadFromDB(id);
         } else {
-            init(id, 3, "", "");
+            init(id, DEFAULT_GROUP, "", "");
         }
     }
 
@@ -56,13 +59,13 @@ public class User {
     //Загружает данные из БД
     public void loadFromDB(int idUser) {
         try {
-            Map<String, Object> resMap = UserController.getInstance().getData(idUser);
+            Map<String, Object> resMap = UserController.getData(idUser);
             id = idUser;
             idGroup = (Integer) resMap.get("id_group");
             sName = (String) resMap.get("s_name");
             name = (String) resMap.get("name");
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.warn("Error in loadFromDB: ", e);
         }
     }
 
@@ -74,7 +77,7 @@ public class User {
     //Загружает данные из БД
     public void loadFromDB(String hash) throws NoAccessException {
         try {
-            Map<String, Object> resMap = UserController.getInstance().getData(hash);
+            Map<String, Object> resMap = UserController.getData(hash);
             if (resMap == null) {
                 throw new NoAccessException("The token was not found.");
             }
@@ -84,7 +87,7 @@ public class User {
             sName = (String) resMap.get("s_name");
             name = (String) resMap.get("name");
         } catch (SQLException e) {
-            LOG.warn(e.getSQLState());
+            LOG.warn("Error in loadFromDB: ", e);
         }
     }
 
@@ -96,6 +99,30 @@ public class User {
         return idGroup;
     }
 
+    public String getsName() {
+        return sName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIdGroup(int idGroup) {
+        this.idGroup = idGroup;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     //Проверка доступа по текущей группе
     public boolean hasRightByGroup(int idCommand){
         return Group.hasRight(idGroup, idCommand);
@@ -104,7 +131,7 @@ public class User {
     //Проверка доступа по id
     public static boolean hasRightByUser(int idUser, int idCommand){
         try {
-            return AccessGroupController.getInstance().hasAccessUser(idUser, idCommand);
+            return AccessGroupController.hasAccessUser(idUser, idCommand);
         } catch (SQLException ignore) {
         }
 
@@ -119,7 +146,7 @@ public class User {
     //Создание токена
     public String createToken() {
         try {
-            return UserController.getInstance().createToken(id);
+            return UserController.createToken(id);
         } catch (SQLException ignore) {
         }
 

@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "route": "/test",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.user.NewUserCommand"
+  }
+]

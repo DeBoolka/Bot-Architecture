@@ -1,20 +1,16 @@
 package dikanev.nikita.core;
 
-import dikanev.nikita.core.api.exceptions.NoAccessException;
-import dikanev.nikita.core.model.commands.Command;
-import dikanev.nikita.core.model.commands.user.DeleteUserCommand;
-import dikanev.nikita.core.model.jobs.Job;
-import dikanev.nikita.core.model.storage.CommandStorage;
-import dikanev.nikita.core.model.storage.DBStorage;
-import dikanev.nikita.core.model.storage.JobStorage;
-import dikanev.nikita.core.model.storage.ServerStorage;
+import dikanev.nikita.core.logic.jobs.Job;
+import dikanev.nikita.core.service.storage.CommandStorage;
+import dikanev.nikita.core.service.storage.DBStorage;
+import dikanev.nikita.core.service.storage.JobStorage;
+import dikanev.nikita.core.service.storage.ServerStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Application {
 
@@ -25,10 +21,19 @@ public class Application {
     private static List<Job> jobs;
 
     public static void  main(String... args) throws Exception{
+
+        daemonize();
+        registerShutdownHook();
+
         init();
 
         LOG.info("Start");
         start();
+    }
+
+    private static void daemonize() throws Exception {
+        System.in.close();
+        System.out.close();
     }
 
     private static void init() throws Exception{
@@ -41,10 +46,13 @@ public class Application {
         String passwordDB = properties.getProperty("db.password");
         DBStorage.getInstance().init(urlDB, loginDB, passwordDB);
 
-        int portServer = Integer.parseInt(properties.getProperty("server.port", "9090"));
-        ServerStorage.getInstance().init(portServer);
+        String routeConflict = properties.getProperty("db.route.conflict", "IGNORE");
+        CommandStorage.getInstance().init(Application.class.getResource("/commands_route.json").getPath(), routeConflict);
 
-        jobs = JobStorage.getInstance().getJobs();
+        int portServer = Integer.parseInt(properties.getProperty("server.port", "9090"));
+        ServerStorage.getInstance().start(portServer);
+
+        JobStorage.getInstance().start();
     }
 
     private static Properties loadConfiguration() {
@@ -60,32 +68,17 @@ public class Application {
     }
 
     private static void start() throws Exception{
+    }
 
-        try {
-            System.out.println(CommandStorage.getInstance().getCommand("user/register").run(null));
-            Command command = new DeleteUserCommand(2);
-            System.out.println(command.getId());
-        } catch (NoAccessException e) {
-            LOG.warn(e.getMessage());
-        }
+    static public void setShutdownFlag() {
+        System.exit(0);
+    }
 
-        if (jobs.isEmpty()) {
-            LOG.warn("No jobs configured. Exist");
-            return;
-        }
-
-        while (true) {
-            for (Job job : jobs) {
-                try {
-                    job.doJob();
-                } catch (Exception e) {
-                    LOG.error("Something wrong", e);
-                }
-            }
-
-            TimeUnit.SECONDS.sleep(1);
-            return;
-        }
+    private static void registerShutdownHook()
+    {
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(Application::setShutdownFlag)
+        );
     }
 
 }
