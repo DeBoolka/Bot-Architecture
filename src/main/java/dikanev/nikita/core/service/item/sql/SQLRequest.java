@@ -27,6 +27,16 @@ public class SQLRequest {
         return this;
     }
 
+    public SQLRequest setInt(int parameterIndex, int value) throws SQLException {
+        prStatement.setInt(parameterIndex, value);
+        return this;
+    }
+
+    public SQLRequest setString(int parameterIndex, String value) throws SQLException {
+        prStatement.setString(parameterIndex, value);
+        return this;
+    }
+
     public int executeUpdate() throws SQLException {
         return prStatement.executeUpdate();
     }

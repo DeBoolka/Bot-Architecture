@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import java.util.List;
 
 public class SimpleArrayObject extends ApiObject {
-    private static Gson gson = new Gson();
     JsonArray objects;
 
     public SimpleArrayObject(JsonArray array) {
@@ -15,6 +14,11 @@ public class SimpleArrayObject extends ApiObject {
     }
 
     public <T> SimpleArrayObject(List<T> array) {
+        super("array");
+        this.objects = gson.toJsonTree(array, array.getClass()).getAsJsonArray();
+    }
+
+    public <T> SimpleArrayObject(T[] array) {
         super("array");
         this.objects = gson.toJsonTree(array, array.getClass()).getAsJsonArray();
     }

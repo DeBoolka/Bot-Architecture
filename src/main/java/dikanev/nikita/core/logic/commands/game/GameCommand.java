@@ -3,9 +3,7 @@ package dikanev.nikita.core.logic.commands.game;
 import dikanev.nikita.core.api.exceptions.ApiException;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.item.Game;
-import dikanev.nikita.core.api.objects.ApiObject;
-import dikanev.nikita.core.api.objects.JObject;
-import dikanev.nikita.core.api.objects.SimpleArrayObject;
+import dikanev.nikita.core.api.objects.*;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.GameController;
 import dikanev.nikita.core.logic.commands.Command;
@@ -27,10 +25,14 @@ public class GameCommand extends Command {
     protected ApiObject ChoiceStartPointOfWork(User user, Parameter params, CommandParser commandParser) throws NoSuchFieldException, ApiException, SQLException {
         switch (commandParser.headers.getF(CommandParser.ENTER_METHOD).toLowerCase()) {
             case "get":
-                if (commandParser.headers.contains("O-FOR-USER")) {
-                    return getSignedUpForTheGame(user, params);
+                switch (commandParser.headers.getFOrDefault("O-FOR", "")) {
+                    case "ALL":
+                        return getGames(params);
+                    case "USER":
+                        return getSignedUpForTheGame(params);
+                    case "GAME":
+                        return getGame(params);
                 }
-                return getGames(params);
             default:
                 return super.ChoiceStartPointOfWork(user, params, commandParser);
         }
@@ -44,12 +46,14 @@ public class GameCommand extends Command {
     @Override
     protected PreparedParameter setupParameters(Parameter params) {
         return new PreparedParameter(new String[][]{
-                new String[0],
                 new String[]{"userId", "name"},
+                new String[]{"gameId"},
+                new String[0]
         }, Map.of(
                 "userId", ((parameter, val) -> parameter.isIntF("userId") ? null : "Incorrect userId parameter."),
-                "name", ((parameter, val) -> parameter.getF("name").length() > 127 || parameter.getF("name").isEmpty() ? "Incorrect name parameter." : null)
-        ));
+                "name", ((parameter, val) -> parameter.getF("name").length() > 127 || parameter.getF("name").isEmpty() ? "Incorrect name parameter." : null),
+                "gameId", ((parameter, val) -> parameter.isIntF("gameId") ? null : "Incorrect gameId parameter.")
+                ));
 
     }
 
@@ -67,12 +71,12 @@ public class GameCommand extends Command {
         return new SimpleArrayObject(games);
     }
 
-    private ApiObject getSignedUpForTheGame(User user, Parameter params) throws InvalidParametersException, SQLException {
+    private ApiObject getSignedUpForTheGame(Parameter params) throws InvalidParametersException, SQLException {
         int userId;
         int count;
         int indent;
         try {
-            userId = params.getIntFOrDefault("userId", user.getId());
+            userId = params.getIntF("userId");
             count = params.getIntFOrDefault("count", COUNT_GAMES);
             indent = params.getIntFOrDefault("indent", 0);
         } catch (Exception e) {
@@ -81,5 +85,14 @@ public class GameCommand extends Command {
 
         return GameController.getUserSignedUpForTheGame(userId, indent, count);
 
+    }
+
+    private ApiObject getGame(Parameter params) throws NoSuchFieldException, InvalidParametersException, SQLException {
+        int gameId = params.getIntF("gameId");
+        if (gameId <= 0) {
+            return new ExceptionObject(new InvalidParametersException("Incorrect gameId parameter."));
+        }
+
+        return new SimpleObject(SimpleObject.GAME, GameController.getGame(gameId));
     }
 }
