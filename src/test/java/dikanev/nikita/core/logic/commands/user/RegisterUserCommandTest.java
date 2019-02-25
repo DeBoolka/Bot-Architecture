@@ -3,7 +3,7 @@ package dikanev.nikita.core.logic.commands.user;
 import dikanev.nikita.core.api.objects.UserObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.mockers.DBMock;
-import dikanev.nikita.core.service.server.parameter.HttpGetParameter;
+import dikanev.nikita.core.service.item.parameter.HttpGetParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

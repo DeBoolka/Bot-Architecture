@@ -7,17 +7,15 @@ import com.google.gson.JsonPrimitive;
 import dikanev.nikita.core.api.InviteIntoSystem;
 import dikanev.nikita.core.api.exceptions.InvalidParametersException;
 import dikanev.nikita.core.api.objects.ApiObject;
-import dikanev.nikita.core.api.objects.ArrayObject;
 import dikanev.nikita.core.api.objects.UnknownObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.controllers.InviteController;
 import dikanev.nikita.core.logic.commands.Command;
-import dikanev.nikita.core.service.server.parameter.Parameter;
+import dikanev.nikita.core.service.item.parameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

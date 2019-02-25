@@ -118,5 +118,65 @@
     "route": "user/ammunition.delete",
     "name": "Test Command",
     "class": "dikanev.nikita.core.logic.commands.user.UserAmmunitionCommand"
+  },
+  {
+    "route": "game/all.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "ALL"
+    }
+  },
+  {
+    "route": "game/my.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "USER"
+    }
+  },
+  {
+    "route": "game.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.GameCommand",
+    "headers": {
+      "O-FOR": "GAME"
+    }
+  },
+  {
+    "route": "game/user.signup",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game/user.issigned",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game/roles.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand",
+    "headers": {
+      "O-FOR": "ROLES"
+    }
+  },
+  {
+    "route": "game/role.get",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand",
+    "headers": {
+      "O-FOR": "ROLE"
+    }
+  },
+  {
+    "route": "game/test.check",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
+  },
+  {
+    "route": "game.register",
+    "name": "Test Command",
+    "class": "dikanev.nikita.core.logic.commands.game.UserFromGameCommand"
   }
 ]

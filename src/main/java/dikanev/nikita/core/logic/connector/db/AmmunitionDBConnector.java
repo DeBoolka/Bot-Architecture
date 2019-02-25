@@ -3,7 +3,7 @@ package dikanev.nikita.core.logic.connector.db;
 import com.google.common.base.Joiner;
 import dikanev.nikita.core.api.item.Ammo;
 import dikanev.nikita.core.api.item.Photo;
-import dikanev.nikita.core.service.server.SQLRequest;
+import dikanev.nikita.core.service.item.sql.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;
 
 import java.sql.ResultSet;

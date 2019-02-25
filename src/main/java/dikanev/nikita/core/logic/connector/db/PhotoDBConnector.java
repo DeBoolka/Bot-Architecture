@@ -2,7 +2,7 @@ package dikanev.nikita.core.logic.connector.db;
 
 import com.google.common.base.Joiner;
 import dikanev.nikita.core.api.item.Photo;
-import dikanev.nikita.core.service.server.SQLRequest;
+import dikanev.nikita.core.service.item.sql.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

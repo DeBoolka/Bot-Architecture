@@ -1,4 +1,4 @@
-package dikanev.nikita.core.service.server;
+package dikanev.nikita.core.service.item.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,6 +24,16 @@ public class SQLRequest {
         for (PrSt temp : statements) {
             temp.set(prStatement);
         }
+        return this;
+    }
+
+    public SQLRequest setInt(int parameterIndex, int value) throws SQLException {
+        prStatement.setInt(parameterIndex, value);
+        return this;
+    }
+
+    public SQLRequest setString(int parameterIndex, String value) throws SQLException {
+        prStatement.setString(parameterIndex, value);
         return this;
     }
 

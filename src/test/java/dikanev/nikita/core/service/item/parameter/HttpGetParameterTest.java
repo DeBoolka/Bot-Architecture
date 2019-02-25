@@ -1,4 +1,4 @@
-package dikanev.nikita.core.service.server.parameter;
+package dikanev.nikita.core.service.item.parameter;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

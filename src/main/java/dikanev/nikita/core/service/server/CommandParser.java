@@ -3,14 +3,19 @@ package dikanev.nikita.core.service.server;
 import com.google.common.base.Joiner;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dikanev.nikita.core.service.server.parameter.HttpGetParameter;
-import dikanev.nikita.core.service.server.parameter.Parameter;
+import dikanev.nikita.core.service.item.parameter.HttpGetParameter;
+import dikanev.nikita.core.service.item.parameter.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommandParser {
+
+    public final static String ENTER_METHOD = "O-Enter-Method";
+    public final static String PATH_SELF = "O-PATH-SELF";
+    public final static String PATH_ABSOLUTE = "O-PATH-ABSOLUTE";
 
     private List<String> commandPath;
 
@@ -22,6 +27,7 @@ public class CommandParser {
         this.commandPath = Arrays.asList(command.split("/"));
 
         parseEnterMethod();
+        this.headers.set(PATH_ABSOLUTE, command);
     }
 
     public List<String> getCommandPath() {
@@ -66,5 +72,9 @@ public class CommandParser {
 
     public String getRoute() {
         return Joiner.on("/").join(commandPath);
+    }
+
+    public void addHeaders(Parameter headers) {
+        headers.keySet().forEach(key -> this.headers.add(key, headers.get(key)));
     }
 }
