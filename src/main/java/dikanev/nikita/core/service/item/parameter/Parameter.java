@@ -1,6 +1,9 @@
 package dikanev.nikita.core.service.item.parameter;
 
-import java.util.*;
+import java.util.IllegalFormatException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 public interface Parameter{
 

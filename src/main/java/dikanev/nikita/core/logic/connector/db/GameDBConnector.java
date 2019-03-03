@@ -8,7 +8,6 @@ import dikanev.nikita.core.api.item.Game;
 import dikanev.nikita.core.api.item.GameRole;
 import dikanev.nikita.core.api.item.Gamer;
 import dikanev.nikita.core.api.item.RoleForGame;
-import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.SimpleArrayObject;
 import dikanev.nikita.core.service.item.sql.SQLRequest;
 import dikanev.nikita.core.service.storage.DBStorage;

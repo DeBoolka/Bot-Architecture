@@ -16,8 +16,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class UserDBConnector {
 
@@ -174,15 +176,15 @@ public class UserDBConnector {
                     .replaceAll("nameOnGame", "game_name")
                     .replaceAll("groupId", "id_group");
         } else {
-            cols = "id, name, s_name, id_group, login, email, age, phone, city, game_name";
+            cols = "id, name, s_name, id_group, id_guarantor, login, email, age, phone, city, game_name";
         }
 
         String sql = "SELECT " + cols + " " +
                 "FROM users " +
                 "JOIN user_info ON id = id_user " +
-                "WHERE 0 " + (userId > 0 ? " OR id = ? " : "")
+                "WHERE is_delete = 0 && ( 0 " + (userId > 0 ? " OR id = ? " : "")
                 + (login != null ? " OR login = ? " : "")
-                + (email != null ? " OR email = ? " : "");
+                + (email != null ? " OR email = ? " : "") + ")";
 
         PreparedStatement prStatement;
         prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
@@ -210,6 +212,7 @@ public class UserDBConnector {
             addJsonPropertyFromResultSet(js, res, "groupId", "id_group", "int");
             addJsonPropertyFromResultSet(js, res, "name", "name", "string");
             addJsonPropertyFromResultSet(js, res, "s_name", "s_name", "string");
+            addJsonPropertyFromResultSet(js, res, "guarantorId", "id_guarantor", "int");
 
             addJsonPropertyFromResultSet(js, res, "login", "login", "string");
             addJsonPropertyFromResultSet(js, res, "email", "email", "string");
@@ -369,7 +372,7 @@ public class UserDBConnector {
 
     //Удаление человека
     public boolean deleteUser(int idUser) throws SQLException {
-        String sql = "DELETE FROM users " +
+        String sql = "UPDATE users SET is_delete = true " +
                 "WHERE id = ? " +
                 "LIMIT 1";
 
@@ -404,9 +407,9 @@ public class UserDBConnector {
     }
 
     //Получение информации о человеке.
-    //Возвращает map с ключами: id_group, s_name, name
+    //Возвращает map с ключами: id_group, s_name, name, id_guarantor
     public Map<String, Object> getData(int idUser) throws SQLException {
-        String sql = "SELECT id_group, name, s_name " +
+        String sql = "SELECT id_group, name, s_name, id_guarantor " +
                 "FROM users " +
                 "WHERE id = ? " +
                 "LIMIT 1;";
@@ -417,9 +420,7 @@ public class UserDBConnector {
 
         Map<String, Object> resMap = new TreeMap<>();
         while (res.next()) {
-            resMap.put("id_group", res.getInt("id_group"));
-            resMap.put("s_name", res.getString("s_name"));
-            resMap.put("name", res.getString("name"));
+            setMapWithGroupSnameNameGuarantor(res, resMap);
         }
 
         res.close();
@@ -427,10 +428,12 @@ public class UserDBConnector {
     }
 
     //Получение информации о человеке.
-    //Возвращает map с ключами: id, id_group, s_name, name
+    //Возвращает map с ключами: id, id_group, s_name, name, id_guarantor
     public Map<String, Object> getData(String hash) throws SQLException {
-        String sql = "SELECT users.id, users.id_group, users.s_name, users.name " +
-                "FROM (SELECT tokens.id FROM tokens WHERE token = ? LIMIT 1) AS tkn LEFT JOIN users USING(id) " +
+        String sql = "SELECT users.id, users.id_group, users.s_name, users.name, users.id_guarantor " +
+                "FROM (SELECT tokens.id FROM tokens WHERE token = ? LIMIT 1) AS tkn " +
+                "   LEFT JOIN users USING(id) " +
+                "WHERE users.is_delete = false " +
                 "LIMIT 1;";
 
         PreparedStatement prStatement = DBStorage.getInstance().getConnection().prepareStatement(sql);
@@ -440,13 +443,18 @@ public class UserDBConnector {
         Map<String, Object> resMap = new TreeMap<>();
         while (res.next()) {
             resMap.put("id", res.getInt("id"));
-            resMap.put("id_group", res.getInt("id_group"));
-            resMap.put("s_name", res.getString("s_name"));
-            resMap.put("name", res.getString("name"));
+            setMapWithGroupSnameNameGuarantor(res, resMap);
         }
 
         res.close();
         return resMap.size() > 0 ? resMap : null;
+    }
+
+    private void setMapWithGroupSnameNameGuarantor(ResultSet res, Map<String, Object> resMap) throws SQLException {
+        resMap.put("id_group", res.getInt("id_group"));
+        resMap.put("s_name", res.getString("s_name"));
+        resMap.put("name", res.getString("name"));
+        resMap.put("id_guarantor", res.getInt("id_guarantor"));
     }
 
     //Создать токен

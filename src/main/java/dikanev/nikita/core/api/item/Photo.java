@@ -1,8 +1,5 @@
 package dikanev.nikita.core.api.item;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Photo {
     public int id;
 

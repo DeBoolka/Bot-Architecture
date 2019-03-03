@@ -5,7 +5,6 @@ import dikanev.nikita.core.api.exceptions.NotFoundException;
 import dikanev.nikita.core.api.item.Game;
 import dikanev.nikita.core.api.item.Gamer;
 import dikanev.nikita.core.api.item.RoleForGame;
-import dikanev.nikita.core.api.objects.ApiObject;
 import dikanev.nikita.core.api.objects.SimpleArrayObject;
 import dikanev.nikita.core.logic.connector.db.GameDBConnector;
 

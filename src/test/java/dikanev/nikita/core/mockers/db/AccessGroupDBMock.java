@@ -1,9 +1,6 @@
 package dikanev.nikita.core.mockers.db;
 
 import dikanev.nikita.core.api.exceptions.NotFoundException;
-
-import static org.mockito.Mockito.*;
-
 import dikanev.nikita.core.logic.connector.db.groups.AccessGroupDBConnector;
 import org.mockito.Mock;
 
@@ -11,6 +8,8 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
 
 public class AccessGroupDBMock {
     private static AccessGroupDBMock ourInstance;
