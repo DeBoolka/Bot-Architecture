@@ -1,8 +1,6 @@
 package dikanev.nikita.core.mockers.db;
 
 import dikanev.nikita.core.api.exceptions.NotFoundException;
-import static org.mockito.Mockito.*;
-
 import dikanev.nikita.core.logic.connector.db.commands.CommandDBConnector;
 import org.mockito.Mock;
 
@@ -10,6 +8,8 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
 
 public class CommandDBMock {
     private static CommandDBMock ourInstance;

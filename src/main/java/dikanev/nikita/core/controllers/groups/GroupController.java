@@ -4,7 +4,6 @@ import dikanev.nikita.core.logic.connector.db.groups.GroupDBConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class GroupController {

@@ -3,14 +3,14 @@ package dikanev.nikita.core.logic.commands.group.access;
 import dikanev.nikita.core.api.objects.MessageObject;
 import dikanev.nikita.core.api.users.User;
 import dikanev.nikita.core.mockers.DBMock;
-
 import dikanev.nikita.core.service.item.parameter.HttpGetParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class CreateAccessGroupCommandTest {
 

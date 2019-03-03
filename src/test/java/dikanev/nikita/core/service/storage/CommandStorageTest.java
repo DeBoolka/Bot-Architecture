@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommandStorageTest {
 

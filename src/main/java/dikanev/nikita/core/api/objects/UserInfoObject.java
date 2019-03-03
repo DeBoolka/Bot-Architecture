@@ -1,7 +1,5 @@
 package dikanev.nikita.core.api.objects;
 
-import dikanev.nikita.core.api.users.UserInfo;
-
 import java.util.Date;
 
 public class UserInfoObject extends ApiObject {

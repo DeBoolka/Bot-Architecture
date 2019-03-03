@@ -1,7 +1,6 @@
 package dikanev.nikita.core.api.objects;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 public class ApiObject {
 

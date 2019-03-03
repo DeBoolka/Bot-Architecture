@@ -6,14 +6,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dikanev.nikita.core.controllers.commands.CommandController;
 import dikanev.nikita.core.logic.commands.Command;
-
 import dikanev.nikita.core.service.server.CommandParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;

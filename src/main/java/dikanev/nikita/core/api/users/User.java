@@ -26,6 +26,8 @@ public class User {
 
     private String name;
 
+    private Integer guarantorId = null;
+
     public User() {
     }
 
@@ -61,9 +63,7 @@ public class User {
         try {
             Map<String, Object> resMap = UserController.getData(idUser);
             id = idUser;
-            idGroup = (Integer) resMap.get("id_group");
-            sName = (String) resMap.get("s_name");
-            name = (String) resMap.get("name");
+            setGroupAndSNameAndNameAndGuarantor(resMap);
         } catch (SQLException e) {
             LOG.warn("Error in loadFromDB: ", e);
         }
@@ -83,12 +83,17 @@ public class User {
             }
 
             id = (Integer) resMap.get("id");
-            idGroup = (Integer) resMap.get("id_group");
-            sName = (String) resMap.get("s_name");
-            name = (String) resMap.get("name");
+            setGroupAndSNameAndNameAndGuarantor(resMap);
         } catch (SQLException e) {
             LOG.warn("Error in loadFromDB: ", e);
         }
+    }
+
+    private void setGroupAndSNameAndNameAndGuarantor(Map<String, Object> resMap) {
+        idGroup = (Integer) resMap.get("id_group");
+        sName = (String) resMap.get("s_name");
+        name = (String) resMap.get("name");
+        guarantorId = (Integer) resMap.get("id_guarantor");
     }
 
     public int getId() {
@@ -121,6 +126,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getGuarantorId() {
+        return guarantorId;
+    }
+
+    public void setGuarantorId(Integer guarantorId) {
+        this.guarantorId = guarantorId;
     }
 
     //Проверка доступа по текущей группе
